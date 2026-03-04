@@ -7,10 +7,13 @@ import {
   IconPhone,
   IconMapPin,
 } from "@tabler/icons-react";
+import LogoIcon from "@/assets/logo-icon";
+import LogoLabel from "@/assets/logo-label";
 
 const footerLinks = [
   { href: "/sobre", label: "Sobre" },
   { href: "/servicos", label: "Serviços" },
+  { href: "/blog", label: "Blog" },
   { href: "/contato", label: "Contato" },
 ];
 
@@ -36,16 +39,22 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-border bg-primary text-primary-foreground">
       <div className="container mx-auto max-w-6xl px-4 py-12">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="w-full space-y-4">
             <Link
               href="/"
-              className="font-bold text-xl text-primary-foreground hover:opacity-90"
+              className="w-fit flex flex-col items-center gap-1 text-primary-foreground hover:opacity-90"
+              aria-label="250k - Página inicial"
             >
-              250k
+              <LogoIcon className="h-10 lg:h-14 w-auto" fillPrimary="#FFFFFF" />
+              <LogoLabel
+                className="w-16 lg:w-20 h-auto"
+                fillPrimary="#FFFFFF"
+              />
             </Link>
             <p className="text-sm text-primary-foreground/80 max-w-xs">
-              Consultoria agrícola com foco em estratégia, gestão e resultados no campo.
+              Consultoria agrícola com foco em estratégia, gestão e resultados
+              no campo.
             </p>
             <div className="flex gap-3 pt-1">
               {socials.map(({ href, label, icon: Icon }) => (

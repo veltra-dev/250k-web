@@ -13,7 +13,7 @@ function validEmail(value: string): boolean {
 
 export async function submitLead(
   _prev: LeadState,
-  formData: FormData
+  formData: FormData,
 ): Promise<LeadState> {
   const name = (formData.get("name") as string)?.trim();
   const email = (formData.get("email") as string)?.trim();
@@ -58,7 +58,7 @@ export async function submitLead(
         const { Resend } = await import("resend");
         const resend = new Resend(resendKey);
         await resend.emails.send({
-          from: "250k Contato <onboarding@resend.dev>",
+          from: "250k Contato <leopoldinodev@gmail.com>",
           to: [email],
           replyTo: email,
           subject: `Contato 250k: ${name}`,

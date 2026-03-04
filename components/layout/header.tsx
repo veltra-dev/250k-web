@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { IconMenu } from "@tabler/icons-react";
-import Logo from "@/assets/logo";
+import LogoIcon from "@/assets/logo-icon";
+import LogoLabel from "@/assets/logo-label";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -21,7 +22,7 @@ const nav = [
   { href: "/", label: "Início" },
   { href: "/servicos", label: "Serviços" },
   { href: "/sobre", label: "Sobre" },
-  // { href: "/contato", label: "Contato" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export function Header() {
@@ -47,33 +48,32 @@ export function Header() {
         "fixed top-0 z-50 w-full transition-[background-color,border-color,height] duration-500",
         isTransparent
           ? "h-24 border-b border-transparent bg-transparent"
-          : "h-12 border-b border-border bg-background backdrop-blur supports-backdrop-filter:bg-background",
+          : "h-12 border-b border-border bg-background backdrop-blur-3xl supports-backdrop-filter:bg-background/85",
       )}
     >
       <div className="container mx-auto flex h-full max-w-6xl items-center justify-between px-4">
         <Link
           href="/"
           className={cn(
-            "flex items-center gap-2 hover:opacity-90 transition-opacity duration-300",
-            isTransparent ? "text-white" : "text-primary",
+            "flex items-center hover:opacity-90 transition-[opacity,transform,gap] duration-500",
+            isTransparent ? "text-white gap-2 lg:gap-4" : "text-primary gap-2",
           )}
           aria-label="250k - Página inicial"
         >
-          <Logo
+          <LogoIcon
             className={cn(
-              "w-auto transition-[height,filter] duration-300",
-              isTransparent ? "h-12" : "h-6",
+              "w-auto transition-[height,filter,transform] duration-500",
+              isTransparent ? "h-10 lg:h-12" : "h-6",
               isTransparent && "brightness-0 invert",
             )}
           />
-          <span
+          <LogoLabel
             className={cn(
-              "font-black",
-              isTransparent ? "text-xl text-white" : "text-lg text-primary",
+              "h-auto transition-[width,filter,transform] duration-500",
+              isTransparent ? "w-20 lg:w-28" : "w-16",
+              isTransparent && "brightness-0 invert",
             )}
-          >
-            250k
-          </span>
+          />
         </Link>
 
         <nav
@@ -87,14 +87,14 @@ export function Header() {
                 key={href}
                 href={href}
                 className={cn(
-                  "text-sm font-medium transition-colors duration-500",
+                  "text-sm font-medium transition-colors duration-300",
                   isTransparent
                     ? "text-white/80 hover:text-white"
                     : "text-muted-foreground hover:text-foreground",
                   isActive &&
                     (isTransparent
-                      ? "text-white font-bold"
-                      : "text-foreground font-bold"),
+                      ? "text-white font-bold hover:text-white"
+                      : "text-brand-orange font-semibold hover:text-brand-orange"),
                 )}
                 aria-current={isActive ? "page" : undefined}
               >

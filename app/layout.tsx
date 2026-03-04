@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { WhatsAppFAB } from "@/components/layout/whatsapp-fab";
+import { Layout } from "@/components/layout/layout";
 import { GTM } from "@/components/analytics/gtm";
 import "./globals.css";
 
@@ -40,10 +38,7 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className="antialiased flex min-h-screen flex-col">
         <GTM />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <WhatsAppFAB />
+        <Layout>{children}</Layout>
       </body>
     </html>
   );

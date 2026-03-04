@@ -9,7 +9,16 @@ Site da **250k**, consultoria agrícola. Site em **português (pt-BR)** com pág
 - **Contato:** Formulário com server action; leads salvos na tabela `leads` do Supabase; opcional envio de e-mail via Resend
 - **Analytics/SEO:** Google Tag Manager (GTM), meta tags, Open Graph, sitemap estático
 
-Fases futuras: Blog (Sanity), Builder de landing pages, LMS e pagamentos (Stripe).
+Fases futuras: Builder de landing pages, LMS e pagamentos (Stripe).
+
+## Blog (Phase 2)
+
+- **Páginas:** listagem em `/blog` e post em `/blog/[slug]`. Conteúdo em **pt-BR** vindo do **Sanity.io**.
+- **Studio (CMS):** Para editar autores, categorias e posts, acesse **[/studio](http://localhost:3000/studio)** (requer login no Sanity).
+- **Variáveis de ambiente:** Em `.env` (ou `.env.local`) defina:
+  - `NEXT_PUBLIC_SANITY_PROJECT_ID`: ID do projeto em [sanity.io/manage](https://sanity.io/manage)
+  - `NEXT_PUBLIC_SANITY_DATASET`: dataset (padrão `production`)
+- **Primeira vez:** Crie um projeto no Sanity, informe o `projectId` no `.env`, rode `npm run dev`, acesse `/studio` e crie ao menos um **Autor**, uma **Categoria** e um **Post** (com slug e data de publicação). O sitemap e as páginas do blog passam a incluir os posts automaticamente.
 
 ## Como rodar
 
@@ -23,7 +32,8 @@ Fases futuras: Blog (Sanity), Builder de landing pages, LMS e pagamentos (Stripe
    - `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`: em [Supabase](https://supabase.com) → Project Settings → API
    - `SUPABASE_SERVICE_ROLE_KEY`: mesma tela (Service role, secret)
    - `NEXT_PUBLIC_GTM_ID`: ID do container do [Google Tag Manager](https://tagmanager.google.com) (ex.: `GTM-XXXXXXX`)
-   - Opcional: `RESEND_API_KEY` para enviar e-mail ao receber um lead
+   - Opcional: `RESEND_API_KEY` para enviar e-mail ao receber um lead  
+   - Phase 2 (Blog): `NEXT_PUBLIC_SANITY_PROJECT_ID` e, se quiser, `NEXT_PUBLIC_SANITY_DATASET`
 
 3. **Banco (Supabase)**  
    Crie a tabela `leads` no seu projeto. Use o SQL em:
@@ -55,4 +65,5 @@ Fases futuras: Blog (Sanity), Builder de landing pages, LMS e pagamentos (Stripe
 - **Next.js** 16+ (App Router, TypeScript)
 - **Tailwind CSS** 4 + **Shadcn/UI**
 - **Supabase** (PostgreSQL, server client para leads)
+- **Sanity.io** (Phase 2: blog — schemas autor, categoria, post; Studio em `/studio`)
 - Cores da marca: verde `#22352D`, laranja `#B14F32`

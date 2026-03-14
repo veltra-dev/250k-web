@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
+import { useDesktop } from "@/lib/use-desktop";
 import L from "leaflet";
-import { MapContainer, TileLayer, Marker, WMSTileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import { researchPoles } from "@/lib/research-poles";
 
-const bounds = (() => {
+function makeBounds(padNorth: number, padHorizontal: number) {
   const lats = researchPoles.map((p) => p.lat);
   const lngs = researchPoles.map((p) => p.lng);
   const minLat = Math.min(...lats);
@@ -13,13 +15,16 @@ const bounds = (() => {
   const maxLng = Math.max(...lngs);
   const latSpan = maxLat - minLat || 0.1;
   const lngSpan = maxLng - minLng || 0.1;
-  const padNorth = 0.06; // room for top pin icon + label (Alta Floresta)
-  const padHorizontal = 0.02;
   return L.latLngBounds(
     [minLat, minLng - padHorizontal * lngSpan],
     [maxLat + padNorth * latSpan, maxLng + padHorizontal * lngSpan],
   );
-})();
+}
+
+const boundsMobile = makeBounds(0.06, 0.02);
+const boundsDesktop = makeBounds(0, 0);
+const centerDesktop = boundsDesktop.getCenter();
+const ZOOM_DESKTOP = 7.4;
 
 // Logo with border following path (white stroke) and leaf filled white
 const LOGO_SVG =
@@ -60,11 +65,24 @@ function createPinIcon(name: string) {
   });
 }
 
+function FitView({ isDesktop }: { isDesktop: boolean }) {
+  const map = useMap();
+  useEffect(() => {
+    if (isDesktop) {
+      map.setView(centerDesktop, ZOOM_DESKTOP);
+    } else {
+      map.fitBounds(boundsMobile, { padding: [1, 1] });
+    }
+  }, [map, isDesktop]);
+  return null;
+}
+
 export function ResearchPolesMapInner() {
+  const isDesktop = useDesktop();
   return (
     <MapContainer
-      bounds={bounds}
-      className="h-[360px] w-full z-0 research-poles-map"
+      bounds={boundsMobile}
+      className="h-[360px] md:h-[500px] w-full z-0 research-poles-map"
       scrollWheelZoom={false}
       zoomControl={false}
       dragging={false}
@@ -74,6 +92,7 @@ export function ResearchPolesMapInner() {
       keyboard={false}
       attributionControl={false}
     >
+      <FitView isDesktop={isDesktop} />
       <TileLayer url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
       {researchPoles.map((pole) => (
         <Marker

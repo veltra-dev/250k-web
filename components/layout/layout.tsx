@@ -6,14 +6,24 @@ import { Footer } from "@/components/layout/footer";
 import { WhatsAppFAB } from "@/components/layout/whatsapp-fab";
 
 const STUDIO_PATH = "/studio";
+const ADMIN_PATH = "/admin";
+const TOP_LEVEL_ROUTES = ["", "contato", "blog", "servicos", "sobre", "admin", "studio"];
+
+function isLandingPagePath(pathname: string | null): boolean {
+  if (!pathname || pathname === "/") return false;
+  const segments = pathname.split("/").filter(Boolean);
+  return segments.length === 1 && !TOP_LEVEL_ROUTES.includes(segments[0]);
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isStudio = pathname?.startsWith(STUDIO_PATH);
+  const isAdmin = pathname?.startsWith(ADMIN_PATH);
+  const isLandingPage = isLandingPagePath(pathname ?? null);
 
-  if (isStudio) {
+  if (isStudio || isAdmin || isLandingPage) {
     return (
-      <div className="flex flex-1 flex-col min-h-0 h-screen">
+      <div className="flex flex-1 flex-col min-h-0">
         {children}
       </div>
     );

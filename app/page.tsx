@@ -85,13 +85,21 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      <Section
-        title="Polos de pesquisa"
-        subtitle="Nossos centros de pesquisa em Mato Grosso"
-        variant="wide"
-      >
-        <ResearchPolesMap />
-      </Section>
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-primary">
+              Polos de pesquisa
+            </h2>
+            <p className="mt-2 text-muted-foreground text-lg">
+              Nossos centros de pesquisa em Mato Grosso
+            </p>
+          </div>
+        </div>
+        <div className="w-full">
+          <ResearchPolesMap />
+        </div>
+      </section>
 
       <Section
         title="O que dizem nossos clientes"

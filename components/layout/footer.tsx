@@ -15,6 +15,7 @@ const footerLinks = [
   { href: "/servicos", label: "Serviços" },
   { href: "/blog", label: "Blog" },
   { href: "/contato", label: "Contato" },
+  { href: "/admin", label: "Acesso Administrativo" },
 ];
 
 const socials = [

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { BuilderPageContent } from "./builder-page-content";
+import { BuilderPageContent } from "@/components/builder/builder-page-content";
 
 function BuilderFallback() {
   return (

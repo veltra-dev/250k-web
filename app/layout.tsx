@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Layout } from "@/components/layout/layout";
 import { GTM } from "@/components/analytics/gtm";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://250k.com.br";
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body className="antialiased flex min-h-screen flex-col">
         <GTM />
         <Layout>{children}</Layout>
+        <Toaster richColors position="bottom-right" />
       </body>
     </html>
   );

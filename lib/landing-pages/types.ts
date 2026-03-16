@@ -82,7 +82,13 @@ export interface GenericBlock {
 export interface LandingPageRow {
   id: string;
   slug: string;
+  title: string;
+  description: string;
   content: Block[];
+  starts_at: string | null;
+  ends_at: string | null;
+  deleted_at: string | null;
+  created_at: string;
 }
 
 // Reserved slugs that must not be used (static routes)

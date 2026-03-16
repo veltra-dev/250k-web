@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
+import { IconLogout } from "@tabler/icons-react";
 
 export function AdminNav() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export function AdminNav() {
 
   async function handleSignOut() {
     await supabase.auth.signOut();
-    router.push("/admin/login");
+    router.push("/");
     router.refresh();
   }
 
@@ -32,6 +33,7 @@ export function AdminNav() {
 
   return (
     <Button variant="ghost" size="sm" onClick={handleSignOut}>
+      <IconLogout />
       Sair
     </Button>
   );

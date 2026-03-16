@@ -21,12 +21,10 @@ export function CTABlock({ data }: CtaBlockProps) {
           <p className="mt-4 text-lg opacity-95">{data.subtitle}</p>
         )}
         <div className="mt-8">
-          <Button
-            asChild
-            size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground"
-          >
-            <Link href={data.buttonLink || "#"}>{data.buttonText || "Saiba mais"}</Link>
+          <Button asChild size="lg" variant="outline">
+            <Link href={data.buttonLink || "#"}>
+              {data.buttonText || "Saiba mais"}
+            </Link>
           </Button>
         </div>
       </div>

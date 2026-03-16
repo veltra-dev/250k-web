@@ -24,7 +24,9 @@ export function HeroBlock({ data }: HeroBlockProps) {
           className="object-cover"
           priority
           sizes="100vw"
-          unoptimized={imageUrl.startsWith("data:") || imageUrl.includes("localhost")}
+          unoptimized={
+            imageUrl.startsWith("data:") || imageUrl.includes("localhost")
+          }
         />
         <div className="absolute inset-0 bg-primary/70" aria-hidden />
       </div>
@@ -43,14 +45,23 @@ export function HeroBlock({ data }: HeroBlockProps) {
             <Button
               asChild
               size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg"
+              className="bg-accent hover:bg-background text-accent-foreground"
             >
-              <Link href={data.primaryButtonLink}>{data.primaryButtonText}</Link>
+              <Link href={data.primaryButtonLink}>
+                {data.primaryButtonText}
+              </Link>
             </Button>
           )}
           {data.secondaryButtonText && data.secondaryButtonLink && (
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10 hover:text-white">
-              <Link href={data.secondaryButtonLink}>{data.secondaryButtonText}</Link>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="text-primary-foreground"
+            >
+              <Link href={data.secondaryButtonLink}>
+                {data.secondaryButtonText}
+              </Link>
             </Button>
           )}
         </div>

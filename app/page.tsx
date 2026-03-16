@@ -1,21 +1,19 @@
-import Link from "next/link";
 import { Section } from "@/components/ui/section";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Hero } from "@/components/home/hero";
 import { TestimonialsCarousel } from "@/components/home/testimonials-carousel";
 import { ClientsSection } from "@/components/home/clients-section";
-import { WeatherWidget } from "@/components/home/weather-widget";
 import { CommoditiesWidget } from "@/components/home/commodities-widget";
 import { ResearchPolesMap } from "@/components/home/research-poles-map";
-import { getWeather } from "@/lib/weather";
+import { StatsBar } from "@/components/home/stats-bar";
+import { HomeServicesStrip } from "@/components/home/home-services-strip";
+import { AboutBlock } from "@/components/about/about-block";
 import { getCommodities } from "@/lib/commodities";
 
+const EXPERIENCE_IMAGE =
+  "https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=800&q=80";
+
 export default async function HomePage() {
-  const [weather, commodities] = await Promise.all([
-    getWeather(),
-    getCommodities(),
-  ]);
+  const commodities = await getCommodities();
 
   return (
     <>
@@ -23,67 +21,56 @@ export default async function HomePage() {
 
       <CommoditiesWidget data={commodities} />
 
-      <Section
-        title="Por que a 250k?"
-        subtitle="Resultados com foco no que importa"
-      >
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="font-semibold text-primary">Estratégia</h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Planejamento e metas alinhados à sua realidade e ao mercado.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="font-semibold text-primary">Gestão</h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Acompanhamento e indicadores para decisões mais assertivas.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="font-semibold text-primary">Resultados</h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Foco em produtividade e sustentabilidade no longo prazo.
-              </p>
-            </CardContent>
-          </Card>
+      <Section id="conteudo" title="Conheça a nossa empresa" variant="wide">
+        <div className="max-w-3xl space-y-4 text-muted-foreground leading-relaxed text-lg">
+          <p>
+            Somos uma empresa de serviços e consultoria agronômica; nosso foco é
+            aumentar a produtividade em grandes culturas. Trazemos a meta de
+            produtividade média de 250 sacas/hectare ano com culturas de soja e
+            milho de forma sustentável — por exemplo: Soja 85 sc + 165 sc de
+            milho por hectare.
+          </p>
+          <p>
+            Na safra 23/24 atendemos mais de 20 mil hectares e influenciamos no
+            manejo em mais de 200 mil hectares.
+          </p>
         </div>
       </Section>
 
-      <Section title="Serviços" subtitle="O que oferecemos">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="font-semibold text-primary">
-                Planejamento estratégico
-              </h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Metas, cenários e planos de ação para o seu negócio.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="font-semibold text-primary">
-                Gestão e apoio técnico
-              </h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Indicadores, análises e conhecimento aplicado ao campo.
-              </p>
-            </CardContent>
-          </Card>
+      <StatsBar />
+
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <AboutBlock
+            title="Experiência"
+            imageSrc={EXPERIENCE_IMAGE}
+            imageAlt="Mãos no solo, agricultura de precisão"
+            reverse
+            content={
+              <ul className="space-y-3 list-disc list-inside text-muted-foreground">
+                <li>
+                  Ciclo por multinacionais com experiência em agricultura de
+                  precisão
+                </li>
+                <li>
+                  Estratégia de gestão dos processos de produção agrícola
+                  visando sustentabilidade ambiental e econômica
+                </li>
+                <li>
+                  Metodologias de amostragem feitas para menor índice de
+                  contaminação de solos
+                </li>
+                <li>
+                  16 anos de experiência em operação de campo em Agricultura de
+                  Precisão
+                </li>
+              </ul>
+            }
+          />
         </div>
-        <div className="mt-6">
-          <Button asChild variant="outline">
-            <Link href="/servicos">Ver todos os serviços</Link>
-          </Button>
-        </div>
-      </Section>
+      </section>
+
+      <HomeServicesStrip />
 
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-6xl">

@@ -6,7 +6,7 @@ export interface WeatherData {
   code: number;
 }
 
-const WMO_CODES: Record<number, string> = {
+export const WMO_CODES: Record<number, string> = {
   0: "Céu limpo",
   1: "Principalmente limpo",
   2: "Parcialmente nublado",

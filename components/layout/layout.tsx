@@ -4,10 +4,19 @@ import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppFAB } from "@/components/layout/whatsapp-fab";
+import { FloatingWeatherWidget } from "@/components/layout/floating-weather-widget";
 
 const STUDIO_PATH = "/studio";
 const ADMIN_PATH = "/admin";
-const TOP_LEVEL_ROUTES = ["", "contato", "blog", "servicos", "sobre", "admin", "studio"];
+const TOP_LEVEL_ROUTES = [
+  "",
+  "contato",
+  "blog",
+  "servicos",
+  "sobre",
+  "admin",
+  "studio",
+];
 
 function isLandingPagePath(pathname: string | null): boolean {
   if (!pathname || pathname === "/") return false;
@@ -22,11 +31,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const isLandingPage = isLandingPagePath(pathname ?? null);
 
   if (isStudio || isAdmin || isLandingPage) {
-    return (
-      <div className="flex flex-1 flex-col min-h-0">
-        {children}
-      </div>
-    );
+    return <div className="flex flex-1 flex-col min-h-0">{children}</div>;
   }
 
   return (
@@ -34,6 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      <FloatingWeatherWidget />
       <WhatsAppFAB />
     </>
   );

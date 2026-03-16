@@ -7,6 +7,7 @@ const maxWidthClass = {
 } as const;
 
 interface SectionProps {
+  id?: string;
   title?: string;
   subtitle?: string;
   children: React.ReactNode;
@@ -15,6 +16,7 @@ interface SectionProps {
 }
 
 export function Section({
+  id,
   title,
   subtitle,
   children,
@@ -22,7 +24,7 @@ export function Section({
   variant = "default",
 }: SectionProps) {
   return (
-    <section className={cn("py-12 md:py-16", className)}>
+    <section id={id} className={cn("py-12 md:py-16", className)}>
       <div className={cn("container mx-auto px-4", maxWidthClass[variant])}>
         {(title || subtitle) && (
           <div className="mb-8">

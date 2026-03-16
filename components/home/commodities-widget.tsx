@@ -29,10 +29,7 @@ const ITEMS: Array<{
     key: "usdBrl",
     // label: "Dólar (USD/BRL)",
     label: "Dólar",
-    get: (d) => {
-      console.log(d);
-      return d.usdBrl;
-    },
+    get: (d) => d.usdBrl,
     Icon: IconCurrencyDollar,
   },
   { key: "soja", label: "Soja", get: (d) => d.soja, Icon: IconPlant2 },
@@ -91,7 +88,6 @@ export function CommoditiesWidget({ data }: { data: CommoditiesData }) {
           >
             {ITEMS.map(({ key, label, get, Icon }) => {
               const value = get(data);
-              console.log(value);
               if (value == null) return null;
               return (
                 <CommodityChip

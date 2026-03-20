@@ -12,7 +12,12 @@ export const metadata: Metadata = {
 };
 
 const SERVICOS_IMAGE =
-  "https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=800&q=80";
+  "https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=1200&h=900&fit=crop&q=80&auto=format";
+const CONSULTORIA_IMAGE = "/images/analise-2.jpg";
+const PALESTRAS_IMAGE = "/images/palestra.jpg";
+const PESQUISA_IMAGE = "/images/performace.png";
+const PRECISAO_IMAGE = "/images/precisao.png";
+const ASSESSORIA_IMAGE = "/images/assessoria.png";
 
 export default function ServicosPage() {
   return (
@@ -24,7 +29,7 @@ export default function ServicosPage() {
         <section id="consultoria">
           <AboutBlock
             title="Consultoria"
-            imageSrc={SERVICOS_IMAGE}
+            imageSrc={CONSULTORIA_IMAGE}
             imageAlt="Consultoria agronômica no campo"
             reverse
             content={
@@ -65,7 +70,7 @@ export default function ServicosPage() {
         <section id="treinamentos-e-palestras">
           <AboutBlock
             title="Treinamentos e Palestras"
-            imageSrc={SERVICOS_IMAGE}
+            imageSrc={PALESTRAS_IMAGE}
             imageAlt="Treinamentos no campo"
             content={
               <>
@@ -85,8 +90,9 @@ export default function ServicosPage() {
         <section id="pesquisa-e-desenvolvimento">
           <AboutBlock
             title="Pesquisa e Desenvolvimento"
-            imageSrc={SERVICOS_IMAGE}
+            imageSrc={PESQUISA_IMAGE}
             imageAlt="Pesquisa agronômica"
+            imageWrapperClassName="aspect-[16/9]"
             reverse
             content={
               <>
@@ -112,8 +118,9 @@ export default function ServicosPage() {
         <section id="agricultura-de-precisao">
           <AboutBlock
             title="Agricultura de precisão"
-            imageSrc={SERVICOS_IMAGE}
+            imageSrc={PRECISAO_IMAGE}
             imageAlt="Agricultura de precisão"
+            imageWrapperClassName="aspect-[3/3] md:aspect-[3/4]"
             content={
               <>
                 <p>
@@ -177,7 +184,7 @@ export default function ServicosPage() {
         <section id="assessoria-de-compras">
           <AboutBlock
             title="Assessoria de Compra"
-            imageSrc={SERVICOS_IMAGE}
+            imageSrc={ASSESSORIA_IMAGE}
             imageAlt="Assessoria de compras"
             reverse
             content={

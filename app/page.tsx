@@ -9,8 +9,7 @@ import { HomeServicesStrip } from "@/components/home/home-services-strip";
 import { AboutBlock } from "@/components/about/about-block";
 import { getCommodities } from "@/lib/commodities";
 
-const EXPERIENCE_IMAGE =
-  "https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=800&q=80";
+const EXPERIENCE_IMAGE = "/images/250k.jpg";
 
 export default async function HomePage() {
   const commodities = await getCommodities();

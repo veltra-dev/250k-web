@@ -8,6 +8,9 @@ interface AboutBlockProps {
   imageAlt: string;
   reverse?: boolean;
   className?: string;
+  imageWrapperClassName?: string;
+  imageClassName?: string;
+  contentClassName?: string;
 }
 
 export function AboutBlock({
@@ -17,6 +20,9 @@ export function AboutBlock({
   imageAlt,
   reverse = false,
   className,
+  imageWrapperClassName,
+  imageClassName,
+  contentClassName,
 }: AboutBlockProps) {
   return (
     <div
@@ -27,13 +33,19 @@ export function AboutBlock({
       )}
     >
       <div className={reverse ? "md:col-start-2" : ""}>
-        <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-muted">
+        <div
+          className={cn(
+            "relative aspect-4/3 rounded-lg overflow-hidden bg-muted",
+            imageWrapperClassName
+          )}
+        >
           <Image
             src={imageSrc}
             alt={imageAlt}
             fill
-            className="object-cover"
+            className={cn("object-cover", imageClassName)}
             sizes="(max-width: 768px) 100vw, 50vw"
+            quality={90}
           />
         </div>
       </div>
@@ -41,7 +53,12 @@ export function AboutBlock({
         <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4">
           {title}
         </h2>
-        <div className="text-muted-foreground leading-relaxed space-y-4">
+        <div
+          className={cn(
+            "text-muted-foreground leading-relaxed space-y-4",
+            contentClassName
+          )}
+        >
           {content}
         </div>
       </div>

@@ -38,11 +38,11 @@ export function StatsBar() {
   return (
     <section className="w-full bg-accent py-10 md:py-12" aria-label="Números da 250k">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="flex flex-wrap justify-center gap-x-12 gap-y-8 md:gap-x-16">
+        <div className="flex gap-6 overflow-x-auto pb-2 md:grid md:grid-cols-5 md:gap-x-12 md:gap-y-8 md:overflow-visible md:pb-0">
           {STATS.map(({ icon: Icon, value, label }) => (
             <div
               key={label}
-              className="flex flex-col items-center text-center text-accent-foreground"
+              className="flex min-w-[170px] shrink-0 flex-col items-center text-center text-accent-foreground md:min-w-0"
             >
               <div className="rounded-full bg-accent-foreground/15 p-3 mb-2">
                 <Icon className="h-6 w-6 md:h-7 md:w-7" strokeWidth={1.8} />
@@ -50,7 +50,7 @@ export function StatsBar() {
               <span className="text-2xl md:text-3xl font-bold tabular-nums">
                 {value}
               </span>
-              <span className="text-sm md:text-base font-medium opacity-95 mt-0.5 max-w-[140px]">
+              <span className="text-sm md:text-base font-medium opacity-95 mt-0.5 max-w-[140px] leading-snug px-1">
                 {label}
               </span>
             </div>

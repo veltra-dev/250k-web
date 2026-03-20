@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { HeroBlockData } from "@/lib/landing-pages/types";
 
 const DEFAULT_HERO_IMAGE =
-  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80";
+  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&fit=crop&q=80&auto=format";
 
 interface HeroBlockProps {
   data: HeroBlockData;
@@ -27,6 +27,7 @@ export function HeroBlock({ data }: HeroBlockProps) {
           unoptimized={
             imageUrl.startsWith("data:") || imageUrl.includes("localhost")
           }
+          quality={90}
         />
         <div className="absolute inset-0 bg-primary/70" aria-hidden />
       </div>

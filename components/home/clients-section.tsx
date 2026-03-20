@@ -9,7 +9,7 @@ function ClientPlaceholder({ name }: { name: string }) {
     .toUpperCase();
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-[100px] px-4 py-5 rounded-lg bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+      className="flex min-h-[100px] w-[180px] shrink-0 flex-col items-center justify-center rounded-lg border border-border bg-card px-4 py-5 text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground"
       title={name}
     >
       <span className="text-2xl font-bold text-primary/60 mb-1">{initials}</span>
@@ -31,7 +31,7 @@ export function ClientsSection() {
           Produtores e cooperativas que escolheram nossa consultoria para
           resultados no campo.
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 md:gap-6">
+        <div className="flex gap-4 overflow-x-auto pb-2 md:gap-6">
           {clients.map((client) => (
             <ClientPlaceholder key={client.name} name={client.name} />
           ))}

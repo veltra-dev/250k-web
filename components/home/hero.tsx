@@ -4,13 +4,23 @@ import Image from "next/image";
 import { IconChevronDown, IconChevronsDown } from "@tabler/icons-react";
 
 const DEFAULT_HERO_IMAGE =
-  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80";
+  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&fit=crop&q=80&auto=format";
+
+
+const DEFAULT_HERO_VIDEO_URL =
+  process.env.NEXT_PUBLIC_HERO_VIDEO_URL ?? "/hero.mp4";
 
 interface HeroProps {
   imageSrc?: string;
+  videoSrc?: string;
+  videoPosterSrc?: string;
 }
 
-export function Hero({ imageSrc = DEFAULT_HERO_IMAGE }: HeroProps) {
+export function Hero({
+  imageSrc = DEFAULT_HERO_IMAGE,
+  videoSrc = DEFAULT_HERO_VIDEO_URL,
+  videoPosterSrc = imageSrc,
+}: HeroProps) {
   const scrollToContent = () => {
     document.getElementById("conteudo")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -26,6 +36,19 @@ export function Hero({ imageSrc = DEFAULT_HERO_IMAGE }: HeroProps) {
           priority
           sizes="100vw"
         />
+        {videoSrc ? (
+          <video
+            src={videoSrc}
+            poster={videoPosterSrc}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 h-full w-full object-cover"
+            aria-hidden="true"
+          />
+        ) : null}
         <div className="absolute inset-0 bg-primary/70" aria-hidden />
       </div>
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const DEFAULT_HERO_IMAGE =
-  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80";
+  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&fit=crop&q=80&auto=format";
 
 export function ServicosHero() {
   return (
@@ -14,6 +14,7 @@ export function ServicosHero() {
           className="object-cover"
           priority
           sizes="100vw"
+          quality={90}
         />
         <div className="absolute inset-0 bg-primary/70" aria-hidden />
       </div>

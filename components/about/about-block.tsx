@@ -3,6 +3,9 @@ import { cn } from "@/lib/utils";
 
 interface AboutBlockProps {
   title: string;
+  /** Quando informado, exibe a marca como imagem no lugar do texto do título. */
+  titleLogoSrc?: string;
+  titleLogoClassName?: string;
   content: React.ReactNode;
   imageSrc: string;
   imageAlt: string;
@@ -15,6 +18,8 @@ interface AboutBlockProps {
 
 export function AboutBlock({
   title,
+  titleLogoSrc,
+  titleLogoClassName,
   content,
   imageSrc,
   imageAlt,
@@ -50,8 +55,23 @@ export function AboutBlock({
         </div>
       </div>
       <div className={reverse ? "md:col-start-1 md:row-start-1" : ""}>
-        <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4">
-          {title}
+        <h2 className="mb-4">
+          {titleLogoSrc ? (
+            <Image
+              src={titleLogoSrc}
+              alt={title}
+              width={320}
+              height={72}
+              className={cn(
+                "h-9 w-auto max-w-full object-contain object-left md:h-11",
+                titleLogoClassName,
+              )}
+            />
+          ) : (
+            <span className="text-2xl font-bold text-primary md:text-3xl">
+              {title}
+            </span>
+          )}
         </h2>
         <div
           className={cn(

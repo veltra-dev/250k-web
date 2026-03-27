@@ -4,9 +4,10 @@ import { ServicosHero } from "@/components/servicos/servicos-hero";
 import { ServicosAnchorNav } from "@/components/servicos/servicos-anchor-nav";
 import { AboutBlock } from "@/components/about/about-block";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Serviços | 250k Consultoria Agrícola",
+  title: "Soluções | 250k Consultoria Agrícola",
   description:
     "Consultoria agronômica, treinamentos, pesquisa e desenvolvimento, agricultura de precisão e assessoria de compras para o produtor rural.",
 };
@@ -20,6 +21,7 @@ const PRECISAO_IMAGE = "/images/precisao.png";
 const ASSESSORIA_IMAGE = "/images/assessoria.png";
 
 export default function ServicosPage() {
+  redirect("/solucoes");
   return (
     <>
       <ServicosHero />

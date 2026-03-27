@@ -12,7 +12,7 @@ import LogoLabel from "@/assets/logo-label";
 
 const footerLinks = [
   { href: "/sobre", label: "Sobre" },
-  { href: "/servicos", label: "Serviços" },
+  { href: "/solucoes", label: "Soluções" },
   { href: "/blog", label: "Blog" },
   { href: "/contato", label: "Contato" },
   { href: "/admin", label: "Acesso Administrativo" },
@@ -20,17 +20,17 @@ const footerLinks = [
 
 const socials = [
   {
-    href: "https://linkedin.com/company/250k",
+    href: "https://www.linkedin.com/company/250k-agricultura-em-alta-performance",
     label: "LinkedIn",
     icon: IconBrandLinkedin,
   },
   {
-    href: "https://instagram.com/250k",
+    href: "https://instagram.com/agro250k",
     label: "Instagram",
     icon: IconBrandInstagram,
   },
   {
-    href: "https://youtube.com/@250k",
+    href: "https://www.youtube.com/@ConsultoriaPesquisa250k",
     label: "YouTube",
     icon: IconBrandYoutube,
   },
@@ -54,8 +54,7 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-primary-foreground/80 max-w-xs">
-              Consultoria agrícola com foco em estratégia, gestão e resultados
-              no campo.
+              Agricultura de Alta Performance
             </p>
             <div className="flex gap-3 pt-1">
               {socials.map(({ href, label, icon: Icon }) => (
@@ -99,19 +98,24 @@ export function Footer() {
               <li className="flex items-center gap-2">
                 <IconMail className="h-4 w-4 shrink-0" size={16} />
                 <a
-                  href="mailto:contato@250k.com.br"
-                  className="hover:text-primary-foreground transition-colors"
+                  href="mailto:teste@mail.com"
+                  className="text-sm font-medium hover:text-primary-foreground transition-colors"
                 >
-                  contato@250k.com.br
+                  teste@mail.com
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <IconPhone className="h-4 w-4 shrink-0" size={16} />
-                (11) 99999-9999
+                <a
+                  href="tel:+5566992206117"
+                  className="hover:text-primary-foreground transition-colors"
+                >
+                  (66) 9.9220-6117
+                </a>
               </li>
               <li className="flex items-center gap-2">
                 <IconMapPin className="h-4 w-4 shrink-0" size={16} />
-                São Paulo, SP
+                R. das Leucenas, 74 - St. Comercial, Sinop - MT, 78550-132
               </li>
             </ul>
           </div>

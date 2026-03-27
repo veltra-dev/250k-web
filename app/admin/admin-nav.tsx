@@ -3,14 +3,14 @@
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { IconLogout } from "@tabler/icons-react";
 
 export function AdminNav() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user: u } }) => setUser(u));
@@ -20,7 +20,7 @@ export function AdminNav() {
       setUser(session?.user ?? null);
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [supabase]);
 
   async function handleSignOut() {
     await supabase.auth.signOut();

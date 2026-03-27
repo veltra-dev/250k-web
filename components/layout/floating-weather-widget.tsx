@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   IconCloud,
   IconSun,
@@ -13,7 +13,6 @@ import {
   useShowAfterHeroHalf,
   getFloatingVisibilityClassName,
 } from "@/hooks/use-show-after-hero-half";
-import { WMO_CODES } from "@/lib/weather";
 import { cn } from "@/lib/utils";
 
 const SINOP_MT = { lat: -11.8642, lng: -55.5036 };
@@ -21,15 +20,6 @@ const SINOP_MT = { lat: -11.8642, lng: -55.5036 };
 interface OpenMeteoCurrent {
   temperature_2m: number;
   weather_code: number;
-}
-
-function getWeatherIcon(code: number) {
-  if (code === 0) return IconSun;
-  if (code >= 1 && code <= 3) return IconCloud;
-  if (code >= 51 && code <= 82) return IconCloudRain;
-  if (code >= 71 && code <= 86) return IconSnowflake;
-  if (code >= 95 && code <= 99) return IconBolt;
-  return IconCloud;
 }
 
 export function FloatingWeatherWidget() {
@@ -66,8 +56,24 @@ export function FloatingWeatherWidget() {
     };
   }, []);
 
-  const condition = WMO_CODES[code] ?? "—";
-  const Icon = getWeatherIcon(code);
+  const iconElement = useMemo(() => {
+    if (code === 0) {
+      return <IconSun className="size-4" strokeWidth={1.5} />;
+    }
+    if (code >= 1 && code <= 3) {
+      return <IconCloud className="size-4" strokeWidth={1.5} />;
+    }
+    if (code >= 51 && code <= 82) {
+      return <IconCloudRain className="size-4" strokeWidth={1.5} />;
+    }
+    if (code >= 71 && code <= 86) {
+      return <IconSnowflake className="size-4" strokeWidth={1.5} />;
+    }
+    if (code >= 95 && code <= 99) {
+      return <IconBolt className="size-4" strokeWidth={1.5} />;
+    }
+    return <IconCloud className="size-4" strokeWidth={1.5} />;
+  }, [code]);
 
   return (
     <div
@@ -86,7 +92,7 @@ export function FloatingWeatherWidget() {
       ) : (
         <>
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background text-foreground">
-            <Icon className="size-4" strokeWidth={1.5} />
+            {iconElement}
           </div>
           <div className="min-w-0">
             <p className="flex items-center gap-1 text-[0.65rem] text-muted-foreground font-semibold">

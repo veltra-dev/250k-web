@@ -13,7 +13,9 @@ const TOP_LEVEL_ROUTES = [
   "contato",
   "blog",
   "servicos",
+  "solucoes",
   "sobre",
+  "questionario",
   "admin",
   "studio",
 ];
@@ -29,9 +31,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const isStudio = pathname?.startsWith(STUDIO_PATH);
   const isAdmin = pathname?.startsWith(ADMIN_PATH);
   const isLandingPage = isLandingPagePath(pathname ?? null);
+  const isQuestionario = pathname?.startsWith("/questionario") ?? false;
 
   if (isStudio || isAdmin || isLandingPage) {
     return <div className="flex flex-1 flex-col min-h-0">{children}</div>;
+  }
+
+  if (isQuestionario) {
+    return (
+      <>
+        <main className="flex-1">{children}</main>
+        <Footer />
+        <FloatingWeatherWidget />
+        <WhatsAppFAB />
+      </>
+    );
   }
 
   return (

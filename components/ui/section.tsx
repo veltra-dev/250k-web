@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const maxWidthClass = {
@@ -9,8 +10,10 @@ const maxWidthClass = {
 interface SectionProps {
   id?: string;
   title?: string;
+  afterTitle?: ReactNode;
   subtitle?: string;
-  children: React.ReactNode;
+  subtitleClassName?: string;
+  children: ReactNode;
   className?: string;
   variant?: keyof typeof maxWidthClass;
 }
@@ -18,23 +21,36 @@ interface SectionProps {
 export function Section({
   id,
   title,
+  afterTitle,
   subtitle,
+  subtitleClassName,
   children,
   className,
   variant = "default",
 }: SectionProps) {
+  const showHeader = title || subtitle || afterTitle;
+
   return (
     <section id={id} className={cn("py-12 md:py-16", className)}>
       <div className={cn("container mx-auto px-4", maxWidthClass[variant])}>
-        {(title || subtitle) && (
+        {showHeader && (
           <div className="mb-8">
             {title && (
               <h2 className="text-2xl md:text-3xl font-bold text-primary">
                 {title}
               </h2>
             )}
+            {afterTitle && <div className="mt-4">{afterTitle}</div>}
             {subtitle && (
-              <p className="mt-2 text-muted-foreground text-lg">{subtitle}</p>
+              <p
+                className={cn(
+                  "text-muted-foreground text-lg",
+                  subtitleClassName,
+                  afterTitle ? "mt-6" : "mt-2",
+                )}
+              >
+                {subtitle}
+              </p>
             )}
           </div>
         )}

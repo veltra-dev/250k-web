@@ -94,7 +94,7 @@ export interface LandingPageRow {
 // Reserved slugs that must not be used (static routes)
 export const RESERVED_SLUGS = [
   "sobre",
-  "servicos",
+  "solucoes",
   "contato",
   "blog",
   "studio",

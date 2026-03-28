@@ -1,15 +1,82 @@
+import Image from "next/image";
+import Link from "next/link";
 import { Section } from "@/components/ui/section";
+import { Button } from "@/components/ui/button";
 import { Hero } from "@/components/home/hero";
-import { TestimonialsCarousel } from "@/components/home/testimonials-carousel";
-import { ClientsSection } from "@/components/home/clients-section";
 import { CommoditiesWidget } from "@/components/home/commodities-widget";
 import { ResearchPolesMap } from "@/components/home/research-poles-map";
-import { StatsBar } from "@/components/home/stats-bar";
-import { HomeServicesStrip } from "@/components/home/home-services-strip";
-import { AboutBlock } from "@/components/about/about-block";
+import { PartnersCarousel } from "@/components/home/partners-carousel";
+import { CasesJourneyTimeline } from "@/components/home/cases-journey-timeline";
+import { PerformanceProgressChart } from "@/components/home/performance-progress-chart";
 import { getCommodities } from "@/lib/commodities";
+import { BigNumbersIntro } from "@/components/home/big-numbers-intro";
+import { PropositoEquation } from "@/components/home/proposito-equation";
 
-const EXPERIENCE_IMAGE = "/images/250k.jpg";
+const hubCardFooterCopyClass =
+  "text-center text-sm font-semibold leading-snug text-primary";
+
+type HubProduct =
+  | {
+      type: "solution";
+      href: string;
+      logo: string;
+      logoAlt: string;
+      subtitle: string;
+    }
+  | {
+      type: "academy";
+      logo: string;
+      logoAlt: string;
+      description: string;
+      ctaHref: string;
+      ctaLabel: string;
+    };
+
+const hubProducts: HubProduct[] = [
+  {
+    type: "solution",
+    href: "/solucoes#pd-k",
+    logo: "/images/empresas/pdK.svg",
+    logoAlt: "PD-K",
+    subtitle: "Pesquisa e Desenvolvimento",
+  },
+  {
+    type: "solution",
+    href: "/solucoes#field-k",
+    logo: "/images/empresas/FiedK.svg",
+    logoAlt: "Field-K",
+    subtitle: "Plano de safra e execução no campo",
+  },
+  {
+    type: "solution",
+    href: "/solucoes#finance-k",
+    logo: "/images/empresas/FinanceK.svg",
+    logoAlt: "Finance-K",
+    subtitle: "Pool de Compra",
+  },
+  {
+    type: "solution",
+    href: "/solucoes#solo-chec-k",
+    logo: "/images/empresas/solo%20checK.svg",
+    logoAlt: "Solo Chec-K",
+    subtitle: "Agricultura de Precisão",
+  },
+  {
+    type: "solution",
+    href: "/solucoes#certifica-k",
+    logo: "/images/empresas/CertificaK.svg",
+    logoAlt: "Certifica-K",
+    subtitle: "Certificadora de Fazendas Produtivas",
+  },
+  {
+    type: "academy",
+    logo: "/images/empresas/Academy2.svg",
+    logoAlt: "250K Academy",
+    description: "Onde dados de campo viram produtividade",
+    ctaHref: "https://academiadeconsultores.250k.com.br",
+    ctaLabel: "Acessar Academia",
+  },
+];
 
 export default async function HomePage() {
   const commodities = await getCommodities();
@@ -17,84 +84,250 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
-
       <CommoditiesWidget data={commodities} />
 
-      <Section id="conteudo" title="Conheça a nossa empresa" variant="wide">
-        <div className="max-w-3xl space-y-4 text-muted-foreground leading-relaxed text-lg">
-          <p>
-            Somos uma empresa de serviços e consultoria agronômica; nosso foco é
-            aumentar a produtividade em grandes culturas. Trazemos a meta de
-            produtividade média de 250 sacas/hectare ano com culturas de soja e
-            milho de forma sustentável — por exemplo: Soja 85 sc + 165 sc de
-            milho por hectare.
-          </p>
-          <p>
-            Na safra 23/24 atendemos mais de 20 mil hectares e influenciamos no
-            manejo em mais de 200 mil hectares.
-          </p>
+      <Section
+        title="Nosso propósito"
+        subtitle="Transformamos áreas rurais comuns em um verdadeiro sistema produtivo de alta performance"
+        variant="wide"
+        id="nosso-proposito"
+      >
+        <div className="space-y-4 text-muted-foreground leading-relaxed text-lg">
+          <p>Dominamos todas as variáveis que impactam o resultado no campo.</p>
+          <PropositoEquation />
         </div>
       </Section>
 
-      <StatsBar />
+      {/* [CASES DE SUCESSO] — título no grid para alinhar o topo da timeline ao H2 */}
+      <Section variant="wide">
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-stretch lg:gap-x-10 lg:gap-y-6">
+          <div className="flex min-h-0 min-w-0 flex-col gap-6">
+            <div>
+              <h2 className="text-2xl font-bold text-primary md:text-3xl">
+                Cases de sucesso
+              </h2>
+              <p className="mt-2 text-lg text-muted-foreground">
+                Jornada sistêmica para atingir altos tetos de produtividade
+              </p>
+            </div>
+            <div className="space-y-4">
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                Construímos uma jornada sistêmica para sua fazenda atingir altos
+                tetos de produtividade.
+              </p>
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                Onde você recebe o mapa da lucratividade para uma safra de alta
+                performance:
+              </p>
+            </div>
 
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <AboutBlock
-            title="Experiência"
-            imageSrc={EXPERIENCE_IMAGE}
-            imageAlt="Mãos no solo, agricultura de precisão"
-            reverse
-            content={
-              <ul className="space-y-3 list-disc list-inside text-muted-foreground">
-                <li>
-                  Ciclo por multinacionais com experiência em agricultura de
-                  precisão
-                </li>
-                <li>
-                  Estratégia de gestão dos processos de produção agrícola
-                  visando sustentabilidade ambiental e econômica
-                </li>
-                <li>
-                  Metodologias de amostragem feitas para menor índice de
-                  contaminação de solos
-                </li>
-                <li>
-                  16 anos de experiência em operação de campo em Agricultura de
-                  Precisão
-                </li>
-              </ul>
-            }
-          />
-        </div>
-      </section>
+            <div className="rounded-2xl border border-border/60 bg-muted/30 p-6">
+              <div className="text-muted-foreground text-sm uppercase tracking-wide">
+                Progressão de performance
+              </div>
+              <PerformanceProgressChart />
+              <p className="mt-3 text-muted-foreground">
+                Progressão de performance de acordo com seu estágio atual para
+                atingirmos toda a área de plantio.
+              </p>
 
-      <HomeServicesStrip />
+              <div className="mt-6 border-t border-border/60 pt-4">
+                <div className="text-muted-foreground text-xs">
+                  * Indicadores e decisões validados com dados de campo.
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-primary">
-              Polos de pesquisa
-            </h2>
-            <p className="mt-2 text-muted-foreground text-lg">
-              Nossos centros de pesquisa em Mato Grosso
-            </p>
+          <div className="flex min-h-0 min-w-0 flex-col lg:pl-2">
+            <CasesJourneyTimeline />
           </div>
         </div>
-        <div className="w-full">
-          <ResearchPolesMap />
+      </Section>
+
+      {/* [AUTORIDADE] */}
+      <Section
+        title="Autoridade"
+        afterTitle={
+          <div className="space-y-6">
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Estamos conectados com os maiores players do mercado.
+            </p>
+            <PartnersCarousel />
+          </div>
+        }
+        subtitle="*Informação precisa, sem viés comercial e orientada por pesquisa"
+        subtitleClassName="text-sm"
+        variant="wide"
+      >
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+          <div className="space-y-4">
+            <p className="text-muted-foreground leading-relaxed text-lg">
+              Somos o maior acervo de informações precisas e sem viés comercial
+              da região norte do estado de Mato Grosso nas culturas de soja e
+              milho.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              Em breve, você terá acesso a todas essas informações na 250K
+              Academy.
+            </p>
+          </div>
+
+          <div className="space-y-3 rounded-2xl border border-border/60 bg-background/40 p-6">
+            <div className="text-primary font-semibold">O que sustentamos</div>
+            <ul className="list-disc list-inside text-muted-foreground space-y-2">
+              <li>4 Pólos de Pesquisa</li>
+              <li>Investimentos superiores a 5.5 MI</li>
+              <li>
+                Divulgações de resultados de pesquisa para transformar incerteza
+                do campo em produtividade
+              </li>
+            </ul>
+          </div>
+        </div>
+      </Section>
+
+      {/* Hub / Ecossistema */}
+      <section className="py-12 md:py-16 bg-muted/20">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-5">
+          <div className="mx-auto mb-8 max-w-4xl space-y-3 text-center">
+            <h2 className="text-2xl font-bold text-primary md:text-3xl">
+              Um hub de soluções completa para você:
+            </h2>
+            <p className="text-lg leading-relaxed text-muted-foreground">
+              PD-K, Field-K, Finance-K, Solo Chec-K, Certifica-K e 250K Academy
+              conectam ciência, decisões e execução para elevar sua
+              produtividade.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3.5 md:grid-cols-3 md:gap-5 lg:grid-cols-6">
+            {hubProducts.map((item) => {
+              const isAcademy = item.type === "academy";
+              const shellClass =
+                "flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border/60 bg-background shadow-sm transition-colors hover:border-border hover:shadow-md";
+
+              const body = (
+                <div className="flex min-h-[104px] flex-1 items-center justify-center bg-linear-to-b from-primary/18 via-primary/10 to-primary/5 p-3 sm:min-h-[118px] sm:p-3.5">
+                  <Image
+                    src={item.logo}
+                    alt={item.logoAlt}
+                    width={160}
+                    height={80}
+                    className="h-15 w-auto max-w-30 object-contain sm:h-17 sm:max-w-32"
+                    unoptimized
+                    priority={isAcademy}
+                  />
+                </div>
+              );
+
+              const footer = (
+                <div className="shrink-0 border-t border-border/30 bg-background/35 px-3 py-3 sm:px-3.5 sm:py-3.5">
+                  {isAcademy ? (
+                    <>
+                      <p className={`mb-2.5 ${hubCardFooterCopyClass}`}>
+                        {item.description}
+                      </p>
+                      <Button
+                        asChild
+                        size="sm"
+                        className="h-7 w-full bg-accent px-1.5 py-0 text-[0.65rem] leading-tight text-accent-foreground hover:bg-accent/90 sm:h-8 sm:text-xs"
+                      >
+                        <a
+                          href={item.ctaHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {item.ctaLabel}
+                        </a>
+                      </Button>
+                    </>
+                  ) : (
+                    <div className="space-y-2 text-center sm:space-y-2.5">
+                      <p className={hubCardFooterCopyClass}>{item.subtitle}</p>
+                      <div className="text-xs font-normal text-primary group-hover:underline sm:text-sm">
+                        Saiba mais
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+
+              if (isAcademy) {
+                return (
+                  <div key="academy" className={shellClass}>
+                    {body}
+                    {footer}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`group ${shellClass}`}
+                >
+                  {body}
+                  {footer}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      <Section
-        title="O que dizem nossos clientes"
-        subtitle="Depoimentos de quem confia na 250k"
-      >
-        <TestimonialsCarousel />
-      </Section>
+      {/* [BIG NUMBERS] */}
+      <Section variant="wide" className="overflow-x-clip">
+        <BigNumbersIntro />
 
-      <ClientsSection />
+        <div className="mb-5 max-w-2xl">
+          <h3 className="text-lg font-semibold text-primary">
+            Mapa com os clientes
+          </h3>
+          <p className="text-muted-foreground">
+            Um mapa de lucratividade para direcionar cada decisão: diagnóstico
+            do solo, inteligência de dados, estratégia agronômica e eficiência
+            no manejo.
+          </p>
+        </div>
+
+        <div className="relative mt-2 w-screen max-w-[100vw] -translate-x-1/2 left-1/2">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-linear-to-r from-background via-background/80 to-transparent backdrop-blur-[1px] sm:w-24"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-linear-to-l from-background via-background/80 to-transparent backdrop-blur-[1px] sm:w-24"
+          />
+          <div className="mask-[linear-gradient(90deg,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(90deg,transparent_0%,black_7%,black_93%,transparent_100%)]">
+            <ResearchPolesMap />
+          </div>
+        </div>
+
+        <div className="mt-10 rounded-2xl border border-border/60 bg-background/40 p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <div className="space-y-2">
+              <div className="text-sm text-muted-foreground uppercase">
+                Estamos mudando a realidade de vários produtores:
+              </div>
+              <div className="text-2xl md:text-3xl font-bold text-primary">
+                Transforme a sua fazenda
+              </div>
+            </div>
+            <div>
+              <Button
+                asChild
+                size="lg"
+                className="bg-accent hover:bg-accent text-accent-foreground shadow-none transition-shadow duration-300 hover:shadow-[0_0_28px_hsl(var(--accent)/0.42)]"
+              >
+                <Link href="/questionario">Clique aqui e saiba mais</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Section>
     </>
   );
 }

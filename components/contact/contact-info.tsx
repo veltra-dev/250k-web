@@ -4,19 +4,19 @@ const contactItems = [
   {
     icon: IconMail,
     label: "E-mail",
-    value: "contato@250k.com.br",
-    href: "mailto:contato@250k.com.br",
+    value: "teste@mail.com",
+    href: "mailto:teste@mail.com",
   },
   {
     icon: IconPhone,
     label: "Telefone",
-    value: "(11) 99999-9999",
-    href: "tel:+5511999999999",
+    value: "(66) 9.9220-6117",
+    href: "tel:+5566992206117",
   },
   {
     icon: IconMapPin,
     label: "Endereço",
-    value: "São Paulo, SP",
+    value: "R. das Leucenas, 74 - St. Comercial, Sinop - MT, 78550-132",
     href: null,
   },
 ];
@@ -28,7 +28,7 @@ export function ContactInfo() {
         Outras formas de contato
       </h3>
       <p className="text-muted-foreground text-sm leading-relaxed">
-        Preferimos retornar por e-mail em até 24 horas. Para demandas urgentes,
+        Preferimos retornar o mais breve possível. Para demandas urgentes,
         utilize o telefone.
       </p>
       <ul className="space-y-4">

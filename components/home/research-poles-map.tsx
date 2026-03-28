@@ -24,15 +24,6 @@ export function ResearchPolesMap() {
   return (
     <div className="relative overflow-hidden border border-border bg-card">
       <MapComponent />
-      {/* Desktop only: fade left and right edges to white */}
-      <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-96 bg-linear-to-r from-white via-white/40 via-40% to-transparent hidden md:block"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-96 bg-linear-to-l from-white via-white/40 via-40% to-transparent hidden md:block"
-        aria-hidden
-      />
     </div>
   );
 }

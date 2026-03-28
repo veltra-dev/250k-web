@@ -1,9 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
-import { useDesktop } from "@/lib/use-desktop";
+import type { MotionValue } from "motion/react";
+import {
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+
+import { useDesktop } from "@/lib/use-desktop";
+import type { ResearchPole } from "@/lib/research-poles";
 import { researchPoles } from "@/lib/research-poles";
 
 function makeBounds(padNorth: number, padHorizontal: number) {
@@ -35,9 +43,14 @@ const LOGO_SVG =
   '<path fill="#B14F32" stroke="#fff" stroke-width="6" d="M133.166 327.034c6.103-1.636 11.317-.485 16.044 1.609 1.767.783 3.616 1.489 5.613 2.231 1.944.721 4.096 1.5 6.197 2.347h-.001a973.697 973.697 0 0 1 13.524 5.593l4.534 1.912.076.032.075.034c2.741 1.242 5.46 2.45 8.186 3.663 2.718 1.209 5.445 2.422 8.167 3.657l1.468.675a389.28 389.28 0 0 1 4.312 2.041c1.895.907 3.725 1.784 5.564 2.63l.448.212c9.293 4.571 12.919 15.861 10.421 24.694-1.57 5.554-5.136 9.136-7.957 11.758-5.086 4.727-9.023 8.711-14.3 13.667-4.844 4.548-10.3 9.451-15.026 13.854a93.381 93.381 0 0 0-2.765 2.716c-.941.951-1.977 2.008-3.04 3.034-2.673 2.579-5.384 5.121-8.035 7.617-4.388 4.134-8.797 8.296-13.23 12.43-5.523 5.15-10.873 10.059-16.329 15.167-1.977 1.851-3.412 3.394-5.655 5.575-.795.773-2.136 1.753-2.416 1.976l-8.836 7.025-1.64-11.17c-.051-.35-.082-.495-.149-.899-.047-.279-.132-.8-.159-1.428l-.007-.275c-.147-13.1-.368-26.318-.403-39.504-.064-24.479.034-48.642-.059-73.058-.017-4.443 1.795-8.774 4.347-12.141 2.575-3.396 6.365-6.423 11.031-7.674Z" />' +
   "</svg>";
 
-function createPinIcon(name: string) {
+function createPinIcon(
+  name: string,
+  motion?: { opacity: number; translateY: number },
+) {
   const isPrimary = name === "Sinop (Matriz)";
   const isAltaFloresta = name === "Alta Floresta";
+  const opacity = motion?.opacity ?? 1;
+  const translateY = motion?.translateY ?? 0;
 
   const escaped = name
     .replace(/&/g, "&amp;")
@@ -47,7 +60,7 @@ function createPinIcon(name: string) {
   return new L.DivIcon({
     className: "research-pole-pin-with-label",
     html: `
-      <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap; ${isAltaFloresta ? "margin-top: 12px;" : ""}">
+      <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap; will-change: transform, opacity; opacity: ${opacity}; transform: translateY(${translateY}px); ${isAltaFloresta ? "margin-top: 12px;" : ""}">
         ${LOGO_SVG}
         <span style="
           font-size: 11px;
@@ -65,6 +78,69 @@ function createPinIcon(name: string) {
   });
 }
 
+function ScrollDrivenPoleMarker({
+  pole,
+  index,
+  total,
+  scrollYProgress,
+  reduceMotion,
+}: {
+  pole: ResearchPole;
+  index: number;
+  total: number;
+  scrollYProgress: MotionValue<number>;
+  reduceMotion: boolean;
+}) {
+  const denom = Math.max(total - 1, 1);
+  /* Janela curta no progresso: todos os pinos até ~ metade do scroll da seção do mapa */
+  const tStart = 0.02 + (index / denom) * 0.34;
+  const tFadeEnd = tStart + 0.065;
+  const tMoveEnd = tStart + 0.04;
+  const opacityMv = useTransform(scrollYProgress, [tStart, tFadeEnd], [0, 1]);
+  const yMv = useTransform(scrollYProgress, [tStart, tMoveEnd], [18, 0]);
+
+  const [vis, setVis] = useState({
+    opacity: reduceMotion ? 1 : 0,
+    ty: reduceMotion ? 0 : 18,
+  });
+
+  useEffect(() => {
+    if (reduceMotion) return;
+
+    let raf = 0;
+    const sync = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        setVis({
+          opacity: opacityMv.get(),
+          ty: yMv.get(),
+        });
+      });
+    };
+
+    sync();
+    const unsub = scrollYProgress.on("change", sync);
+    return () => {
+      cancelAnimationFrame(raf);
+      unsub();
+    };
+  }, [reduceMotion, scrollYProgress, opacityMv, yMv]);
+
+  const icon = useMemo(
+    () => createPinIcon(pole.name, { opacity: vis.opacity, translateY: vis.ty }),
+    [pole.name, vis.opacity, vis.ty],
+  );
+
+  return (
+    <Marker
+      position={[pole.lat, pole.lng]}
+      icon={icon}
+      title={pole.name}
+      interactive={false}
+    />
+  );
+}
+
 function FitView({ isDesktop }: { isDesktop: boolean }) {
   const map = useMap();
   useEffect(() => {
@@ -79,30 +155,44 @@ function FitView({ isDesktop }: { isDesktop: boolean }) {
 
 export function ResearchPolesMapInner() {
   const isDesktop = useDesktop();
+  const reduceMotion = useReducedMotion();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    /* Progresso 1 mais cedo: fim do bloco do mapa ainda na área visível (~2/3 da tela), sem precisar ir ao footer */
+    offset: ["start 0.9", "end 0.58"],
+  });
+
+  const total = researchPoles.length;
+
   return (
-    <MapContainer
-      bounds={boundsMobile}
-      className="h-[360px] md:h-[500px] w-full z-0 research-poles-map"
-      scrollWheelZoom={false}
-      zoomControl={false}
-      dragging={false}
-      doubleClickZoom={false}
-      touchZoom={false}
-      boxZoom={false}
-      keyboard={false}
-      attributionControl={false}
-    >
-      <FitView isDesktop={isDesktop} />
-      <TileLayer url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
-      {researchPoles.map((pole) => (
-        <Marker
-          key={pole.id}
-          position={[pole.lat, pole.lng]}
-          icon={createPinIcon(pole.name)}
-          title={pole.name}
-          interactive={false}
-        />
-      ))}
-    </MapContainer>
+    <div ref={containerRef} className="relative">
+      <MapContainer
+        bounds={boundsMobile}
+        className="h-[360px] md:h-[500px] w-full z-0 research-poles-map"
+        scrollWheelZoom={false}
+        zoomControl={false}
+        dragging={false}
+        doubleClickZoom={false}
+        touchZoom={false}
+        boxZoom={false}
+        keyboard={false}
+        attributionControl={false}
+      >
+        <FitView isDesktop={isDesktop} />
+        <TileLayer url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
+        {researchPoles.map((pole, index) => (
+          <ScrollDrivenPoleMarker
+            key={pole.id}
+            pole={pole}
+            index={index}
+            total={total}
+            scrollYProgress={scrollYProgress}
+            reduceMotion={!!reduceMotion}
+          />
+        ))}
+      </MapContainer>
+    </div>
   );
 }

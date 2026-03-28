@@ -54,6 +54,9 @@
 }
 
 :root {
+  /* Transições de cor do “K” (Soluções): motion lê estes valores */
+  --brand-k-mark-idle: hsl(var(--primary));
+  --brand-k-mark-active: var(--color-brand-orange);
   --color-brand-green: #22352d;
   --color-brand-orange: #b14f32;
   --background: 0 0% 100%;
@@ -86,6 +89,8 @@
 }
 
 .dark {
+  --brand-k-mark-idle: hsl(var(--primary));
+  --brand-k-mark-active: hsl(11 55% 62%);
   --background: 0 0% 3.9%;
   --foreground: 0 0% 98%;
   --card: 0 0% 3.9%;
@@ -113,7 +118,7 @@
 }
 
 @layer base {
-  html {
+  html:not(.lenis) {
     scroll-behavior: smooth;
   }
   [id] {
@@ -133,5 +138,177 @@
   }
   h3 {
     @apply font-semibold;
+  }
+}
+
+@keyframes heroLeadAttention {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+  }
+  12% {
+    transform: translateY(-1px) translateX(0.5px) rotate(-1deg) scale(1.04);
+  }
+  24% {
+    transform: translateY(0) translateX(-0.5px) rotate(1deg) scale(1.03);
+  }
+  36% {
+    transform: translateY(-1px) translateX(0) rotate(-0.5deg) scale(1.05);
+  }
+  48% {
+    transform: translateY(0) translateX(0.5px) rotate(0.8deg) scale(1.03);
+  }
+  60% {
+    transform: translateY(-1px) translateX(0) rotate(0.5deg) scale(1.06);
+  }
+  72% {
+    transform: translateY(0) translateX(-0.5px) rotate(-0.8deg) scale(1.03);
+  }
+  84% {
+    transform: translateY(0) translateX(0.5px) rotate(0.8deg) scale(1.04);
+  }
+}
+
+@layer utilities {
+  .hero-lead-attention {
+    animation: heroLeadAttention 3.2s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform;
+    transition: transform 180ms ease;
+  }
+
+  .hero-lead-attention:hover {
+    /* Ao passar o mouse, garantimos escala maior e transform limpa */
+    animation: none;
+    transform: scale(1.12);
+  }
+
+  .hero-lead-attention:active {
+    animation: none;
+    transform: scale(1.09);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-lead-attention {
+    animation: none;
+  }
+}
+
+/* Questionário resultado: imprimir só o cartão (resto da página oculto) */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  /* min-h-screen / min-h-dvh ainda ocupam altura no fluxo com visibility:hidden — colapsar */
+  html:has(#questionario-resultado-print) {
+    height: auto !important;
+  }
+
+  html:has(#questionario-resultado-print) body {
+    min-height: 0 !important;
+    height: auto !important;
+    background: #fff !important;
+  }
+
+  body:has(#questionario-resultado-print) main {
+    min-height: 0 !important;
+    height: auto !important;
+    display: block !important;
+    flex: none !important;
+  }
+
+  body:has(#questionario-resultado-print) .questionario-resultado-screen {
+    min-height: 0 !important;
+    height: auto !important;
+    padding-block: 0 !important;
+    display: block !important;
+  }
+
+  body:has(#questionario-resultado-print) .questionario-resultado-screen > .container {
+    height: auto !important;
+    max-width: 100% !important;
+    padding-inline: 0 !important;
+  }
+
+  /*
+   * Não usar visibility:hidden no pai + visible nos filhos: o Chrome costuma omitir
+   * texto no PDF; imagens (ex.: logo) ainda aparecem.
+   */
+  html:has(#questionario-resultado-print) {
+    color-scheme: light !important;
+  }
+
+  html:has(#questionario-resultado-print) [data-sonner-toaster],
+  html:has(#questionario-resultado-print) .questionario-resultado-confetti {
+    display: none !important;
+  }
+
+  body:has(#questionario-resultado-print) #questionario-resultado-print {
+    position: static !important;
+    width: 100%;
+    max-width: 100%;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 8mm 10mm !important;
+    background: #fff !important;
+    color: #1a1a1a !important;
+    box-shadow: none !important;
+    border: 1px solid #e5e5e5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* .dark / variáveis: forçar tinta escura no papel (color + webkit-fill) */
+  body:has(#questionario-resultado-print) #questionario-resultado-print,
+  body:has(#questionario-resultado-print) #questionario-resultado-print * {
+    color: #1a1a1a !important;
+    -webkit-text-fill-color: #1a1a1a !important;
+  }
+
+  body:has(#questionario-resultado-print)
+    #questionario-resultado-print
+    .questionario-resultado-no-print {
+    display: none !important;
+  }
+
+  body:has(#questionario-resultado-print)
+    #questionario-resultado-print
+    .questionario-resultado-print-body
+    > * + * {
+    margin-top: 0.55rem !important;
+  }
+
+  body:has(#questionario-resultado-print)
+    #questionario-resultado-print
+    .questionario-resultado-print-body
+    .space-y-4
+    > * + * {
+    margin-top: 0.4rem !important;
+  }
+
+  body:has(#questionario-resultado-print)
+    #questionario-resultado-print
+    .questionario-resultado-print-footer {
+    padding-top: 0.5rem !important;
+    gap: 0.35rem !important;
+    border-color: #d4d4d4 !important;
+  }
+
+  body:has(#questionario-resultado-print)
+    #questionario-resultado-print
+    .questionario-resultado-print-logo {
+    height: 40px !important;
+    width: 40px !important;
+  }
+
+  body:has(#questionario-resultado-print) #questionario-resultado-print h1 {
+    font-size: 16pt !important;
+    line-height: 1.2 !important;
   }
 }

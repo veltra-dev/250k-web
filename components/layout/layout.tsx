@@ -1,7 +1,10 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/header";
+import { LenisInstanceProvider } from "@/components/layout/lenis-instance-context";
+import { MarketingLenis } from "@/components/layout/marketing-lenis";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppFAB } from "@/components/layout/whatsapp-fab";
 import { FloatingWeatherWidget } from "@/components/layout/floating-weather-widget";
@@ -42,12 +45,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <LenisInstanceProvider>
+      <Suspense fallback={null}>
+        <MarketingLenis />
+      </Suspense>
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
       <FloatingWeatherWidget />
       <WhatsAppFAB />
-    </>
+    </LenisInstanceProvider>
   );
 }

@@ -9,6 +9,7 @@ import { PartnersCarousel } from "@/components/home/partners-carousel";
 import { CasesJourneyTimeline } from "@/components/home/cases-journey-timeline";
 import { PerformanceProgressChart } from "@/components/home/performance-progress-chart";
 import { getCommodities } from "@/lib/commodities";
+import { BigNumbersIntro } from "@/components/home/big-numbers-intro";
 import { PropositoEquation } from "@/components/home/proposito-equation";
 
 const hubCardFooterCopyClass =
@@ -91,7 +92,7 @@ export default async function HomePage() {
         variant="wide"
         id="nosso-proposito"
       >
-        <div className="max-w-3xl space-y-4 text-muted-foreground leading-relaxed text-lg">
+        <div className="space-y-4 text-muted-foreground leading-relaxed text-lg">
           <p>Dominamos todas as variáveis que impactam o resultado no campo.</p>
           <PropositoEquation />
         </div>
@@ -162,9 +163,9 @@ export default async function HomePage() {
         <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
           <div className="space-y-4">
             <p className="text-muted-foreground leading-relaxed text-lg">
-              Somos o maior acervo de informações precisas e sem viés
-              comercial da região norte do estado de Mato Grosso nas culturas
-              de soja e milho.
+              Somos o maior acervo de informações precisas e sem viés comercial
+              da região norte do estado de Mato Grosso nas culturas de soja e
+              milho.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               Em breve, você terá acesso a todas essas informações na 250K
@@ -178,8 +179,8 @@ export default async function HomePage() {
               <li>4 Pólos de Pesquisa</li>
               <li>Investimentos superiores a 5.5 MI</li>
               <li>
-                Divulgações de resultados de pesquisa para transformar
-                incerteza do campo em produtividade
+                Divulgações de resultados de pesquisa para transformar incerteza
+                do campo em produtividade
               </li>
             </ul>
           </div>
@@ -278,40 +279,7 @@ export default async function HomePage() {
 
       {/* [BIG NUMBERS] */}
       <Section variant="wide" className="overflow-x-clip">
-        <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="shrink-0 lg:max-w-md lg:pr-8">
-            <h2 className="text-2xl font-bold text-primary md:text-3xl">
-              Big numbers
-            </h2>
-            <p className="mt-2 text-lg text-muted-foreground">
-              Indicadores de influência e atendimento
-            </p>
-          </div>
-          <div className="flex w-full min-w-0 flex-1 flex-wrap content-end items-end justify-between gap-x-4 gap-y-5 sm:gap-x-6 lg:max-w-3xl lg:justify-end lg:gap-x-8 lg:gap-y-0">
-            <div className="min-w-22 flex-1 lg:flex-initial lg:text-right">
-              <div className="text-xs text-muted-foreground uppercase tracking-wide sm:text-sm">
-                Hectares influenciados
-              </div>
-              <div className="text-2xl font-bold text-primary sm:text-3xl">
-                +1 Mi
-              </div>
-            </div>
-            <div className="min-w-22 flex-1 lg:flex-initial lg:text-right">
-              <div className="text-xs text-muted-foreground uppercase tracking-wide sm:text-sm">
-                Hectares atendidos
-              </div>
-              <div className="text-2xl font-bold text-primary sm:text-3xl">
-                109 mil
-              </div>
-            </div>
-            <div className="min-w-22 flex-1 lg:flex-initial lg:text-right">
-              <div className="text-xs text-muted-foreground uppercase tracking-wide sm:text-sm">
-                Clientes ativos
-              </div>
-              <div className="text-2xl font-bold text-primary sm:text-3xl">54</div>
-            </div>
-          </div>
-        </div>
+        <BigNumbersIntro />
 
         <div className="mb-5 max-w-2xl">
           <h3 className="text-lg font-semibold text-primary">
@@ -319,8 +287,8 @@ export default async function HomePage() {
           </h3>
           <p className="text-muted-foreground">
             Um mapa de lucratividade para direcionar cada decisão: diagnóstico
-            do solo, inteligência de dados, estratégia agronômica e eficiência no
-            manejo.
+            do solo, inteligência de dados, estratégia agronômica e eficiência
+            no manejo.
           </p>
         </div>
 

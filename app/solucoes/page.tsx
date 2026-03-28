@@ -5,6 +5,9 @@ import Link from "next/link";
 
 import { SolucoesHero } from "@/components/solucoes/solucoes-hero";
 import { SolucoesAnchorNav } from "@/components/solucoes/solucoes-anchor-nav";
+import { SolucoesFirstScrollProvider } from "@/components/solucoes/solucoes-first-scroll-context";
+import { archivoSolutionTitle } from "@/lib/fonts/archivo-solution-title";
+import { cn } from "@/lib/utils";
 
 const PD_IMAGE = "/images/post/pd-k-post.png";
 const FIELD_IMAGE = "/images/post/field-k-post.png";
@@ -13,12 +16,17 @@ const SOLO_CHEC_IMAGE = "/images/post/solochec-k-post.png";
 const CERTIFICA_IMAGE = "/images/post/certifica-k-post.png";
 const ACADEMY_IMAGE = "/images/post/250k-academy-post.png";
 
-const PD_LOGO = "/images/empresas/pdK.svg";
-const FIELD_LOGO = "/images/empresas/FiedK.svg";
-const FINANCE_LOGO = "/images/empresas/FinanceK.svg";
-const SOLO_CHEC_LOGO = "/images/empresas/solo%20checK.svg";
-const CERTIFICA_LOGO = "/images/empresas/CertificaK.svg";
-const ACADEMY_LOGO = "/images/empresas/Academy.svg";
+const solucoesSectionTitleProps = {
+  titleClassName: cn(
+    archivoSolutionTitle.className,
+    "text-2xl md:text-5xl text-primary",
+  ),
+  titleStyle: {
+    fontVariationSettings: "'wght' 800, 'wdth' 125",
+  } as const,
+  brandOrangeK: true,
+  animateBrandKOnFirstScroll: true,
+} as const;
 
 /** Posts em formato vertical: área mais alta e contain para mostrar a arte inteira. */
 const SOLUCOES_POST_IMAGE_LAYOUT = {
@@ -35,27 +43,28 @@ export const metadata: Metadata = {
 
 export default function SolucoesPage() {
   return (
-    <>
+    <SolucoesFirstScrollProvider>
       <SolucoesHero />
       <SolucoesAnchorNav />
 
       <div className="container mx-auto px-4 max-w-6xl py-12 md:py-16 space-y-20 md:space-y-24">
         <section id="pd-k">
           <AboutBlock
-            title="PD-K"
-            titleLogoSrc={PD_LOGO}
+            title="PDK"
+            {...solucoesSectionTitleProps}
             imageSrc={PD_IMAGE}
             imageAlt="Pesquisa e desenvolvimento agronômico"
             {...SOLUCOES_POST_IMAGE_LAYOUT}
             content={
               <>
                 <h3 className="text-lg font-semibold text-primary pt-2">
-                  Onde a insegurança da escolha se torna produtividade na lavoura
+                  Onde a insegurança da escolha se torna produtividade na
+                  lavoura
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
                   A PD-K é o núcleo de inteligência da 250K que transforma dados
-                  de campo em decisões altamente produtivas para as culturas
-                  de soja e milho de forma independente, sem viés comercial.
+                  de campo em decisões altamente produtivas para as culturas de
+                  soja e milho de forma independente, sem viés comercial.
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
                   A PD-K é uma proteção contra o erro do produtor rural. Para
@@ -76,8 +85,8 @@ export default function SolucoesPage() {
                 </ul>
 
                 <p className="text-primary font-semibold pt-2">
-                  Nossos resultados apontam até 40% de redução na incidência
-                  de podridão de grãos.
+                  Nossos resultados apontam até 40% de redução na incidência de
+                  podridão de grãos.
                 </p>
 
                 <p className="text-muted-foreground leading-relaxed">
@@ -94,9 +103,9 @@ export default function SolucoesPage() {
                 </p>
 
                 <p className="text-muted-foreground leading-relaxed">
-                  Nossos estudos realizados são únicos e garantem informações que
-                  apoiam a tomada de decisão do produtor rural. Transformando
-                  decisões em produtividades.
+                  Nossos estudos realizados são únicos e garantem informações
+                  que apoiam a tomada de decisão do produtor rural.
+                  Transformando decisões em produtividades.
                 </p>
 
                 <p className="text-muted-foreground pt-2">
@@ -147,8 +156,8 @@ export default function SolucoesPage() {
 
         <section id="field-k">
           <AboutBlock
-            title="Field-K"
-            titleLogoSrc={FIELD_LOGO}
+            title="FieldK"
+            {...solucoesSectionTitleProps}
             imageSrc={FIELD_IMAGE}
             imageAlt="Execução e validação no campo"
             reverse
@@ -169,10 +178,10 @@ export default function SolucoesPage() {
                   lavoura.
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Temos como propósito entregar ao nosso produtor um plano de safra
-                  descomplicado, focado na eficiência operacional, validado com
-                  informações de campo do nosso centro de Pesquisa e
-                  Desenvolvimento (PD-K).
+                  Temos como propósito entregar ao nosso produtor um plano de
+                  safra descomplicado, focado na eficiência operacional,
+                  validado com informações de campo do nosso centro de Pesquisa
+                  e Desenvolvimento (PD-K).
                 </p>
 
                 <p className="text-muted-foreground leading-relaxed pt-2">
@@ -189,9 +198,9 @@ export default function SolucoesPage() {
                 </ul>
 
                 <p className="text-muted-foreground leading-relaxed pt-2">
-                  Nossa metodologia está assegurada pelo plano de desenvolvimento
-                  250K (85 sacas de soja + 165 sacas de milho) e estruturado pelos
-                  protocolos técnicos de pesquisa.
+                  Nossa metodologia está assegurada pelo plano de
+                  desenvolvimento 250K (85 sacas de soja + 165 sacas de milho) e
+                  estruturado pelos protocolos técnicos de pesquisa.
                 </p>
 
                 <p className="text-muted-foreground leading-relaxed pt-2">
@@ -218,8 +227,8 @@ export default function SolucoesPage() {
 
         <section id="finance-k">
           <AboutBlock
-            title="Finance-K"
-            titleLogoSrc={FINANCE_LOGO}
+            title="FinanceK"
+            {...solucoesSectionTitleProps}
             imageSrc={FINANCE_IMAGE}
             imageAlt="Pool de Compra"
             {...SOLUCOES_POST_IMAGE_LAYOUT}
@@ -250,8 +259,8 @@ export default function SolucoesPage() {
 
         <section id="solo-chec-k">
           <AboutBlock
-            title="Solo Chec-K"
-            titleLogoSrc={SOLO_CHEC_LOGO}
+            title="Solo ChecK"
+            {...solucoesSectionTitleProps}
             imageSrc={SOLO_CHEC_IMAGE}
             imageAlt="Agricultura de Precisão"
             reverse
@@ -286,8 +295,8 @@ export default function SolucoesPage() {
                       Mapeamento de compactação
                     </h3>
                     <p className="text-muted-foreground mt-1">
-                      Análises de compactação para melhorar crescimento radicular,
-                      infiltração e armazenamento de água.
+                      Análises de compactação para melhorar crescimento
+                      radicular, infiltração e armazenamento de água.
                     </p>
                   </div>
                 </div>
@@ -298,16 +307,16 @@ export default function SolucoesPage() {
 
         <section id="certifica-k">
           <AboutBlock
-            title="Certifica-K"
-            titleLogoSrc={CERTIFICA_LOGO}
+            title="CertificaK"
+            {...solucoesSectionTitleProps}
             imageSrc={CERTIFICA_IMAGE}
             imageAlt="Certificação de Fazendas Produtivas"
             {...SOLUCOES_POST_IMAGE_LAYOUT}
             content={
               <>
                 <p className="text-muted-foreground leading-relaxed">
-                  Certificação de Fazendas Produtivas baseada em dados, validação
-                  técnica e rastreabilidade de processos.
+                  Certificação de Fazendas Produtivas baseada em dados,
+                  validação técnica e rastreabilidade de processos.
                 </p>
                 <ul className="list-disc list-inside text-muted-foreground space-y-1">
                   <li>Governança e consistência de registros</li>
@@ -315,8 +324,13 @@ export default function SolucoesPage() {
                   <li>Relatórios e evidências para auditoria</li>
                 </ul>
                 <div className="pt-2">
-                  <Button asChild className="mt-6 bg-accent hover:bg-accent/90 text-accent-foreground">
-                    <Link href="/questionario">Quero avaliar minha fazenda</Link>
+                  <Button
+                    asChild
+                    className="mt-6 bg-accent hover:bg-accent/90 text-accent-foreground"
+                  >
+                    <Link href="/questionario">
+                      Quero avaliar minha fazenda
+                    </Link>
                   </Button>
                 </div>
               </>
@@ -327,7 +341,7 @@ export default function SolucoesPage() {
         <section id="academy">
           <AboutBlock
             title="250K Academy"
-            titleLogoSrc={ACADEMY_LOGO}
+            {...solucoesSectionTitleProps}
             imageSrc={ACADEMY_IMAGE}
             imageAlt="Dados de campo e produtividade"
             reverse
@@ -336,13 +350,16 @@ export default function SolucoesPage() {
               <>
                 <p className="text-muted-foreground leading-relaxed">
                   Onde dados de campo viram produtividade: acesso ao acervo e ao
-                  conhecimento técnico das culturas de soja e milho da região norte
-                  do estado de Mato Grosso.
+                  conhecimento técnico das culturas de soja e milho da região
+                  norte do estado de Mato Grosso.
                 </p>
                 <p className="text-primary font-semibold pt-2">
                   Acesse 250K Academy - Onde dados de campo viram produtividade
                 </p>
-                <Button asChild className="mt-6 bg-accent hover:bg-accent/90 text-accent-foreground">
+                <Button
+                  asChild
+                  className="mt-6 bg-accent hover:bg-accent/90 text-accent-foreground"
+                >
                   <a
                     href="https://academiadeconsultores.250k.com.br"
                     target="_blank"
@@ -356,7 +373,6 @@ export default function SolucoesPage() {
           />
         </section>
       </div>
-    </>
+    </SolucoesFirstScrollProvider>
   );
 }
-

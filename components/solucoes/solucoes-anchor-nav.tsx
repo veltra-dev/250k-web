@@ -66,6 +66,7 @@ export function SolucoesAnchorNav() {
     >
       <div
         ref={scrollContainerRef}
+        data-lenis-prevent
         className="w-full overflow-x-auto overflow-y-hidden md:overflow-visible"
       >
         <div className="flex flex-nowrap gap-2 py-3 md:py-4 min-w-max md:min-w-0 md:justify-center pl-4 pr-4 md:container md:mx-auto md:max-w-6xl md:flex-wrap">
@@ -81,17 +82,20 @@ export function SolucoesAnchorNav() {
                 className={cn(
                   "group inline-flex shrink-0 items-center rounded-md px-3 py-2 text-sm font-medium tracking-tight transition-colors duration-200",
                   isActive
-                    ? "bg-brand-green/12 text-primary shadow-sm ring-1 ring-brand-green/25 dark:bg-brand-green/18 dark:text-[hsl(150_25%_90%)] dark:ring-brand-green/35"
+                    ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:bg-brand-green/10 hover:text-primary dark:hover:bg-brand-green/12",
                 )}
               >
                 <span>{beforeK}</span>
-                <span className="font-semibold text-brand-orange dark:text-[hsl(11_55%_62%)]">
+                <span
+                  className={cn(
+                    "font-semibold text-brand-orange dark:text-[hsl(11_55%_62%)]",
+                    isActive && "text-accent-foreground",
+                  )}
+                >
                   K
                 </span>
-                {after ? (
-                  <span className="ml-1.5">{after}</span>
-                ) : null}
+                {after ? <span className="ml-1.5">{after}</span> : null}
               </Link>
             );
           })}

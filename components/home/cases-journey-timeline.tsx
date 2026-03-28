@@ -18,6 +18,7 @@ import {
   useReducedMotion,
 } from "motion/react";
 
+import { useMonotonicScrollProgress } from "@/hooks/use-monotonic-scroll-progress";
 import { cn } from "@/lib/utils";
 
 type IconComp = ComponentType<SVGProps<SVGSVGElement>>;
@@ -239,7 +240,11 @@ function TimelineStepItem({
   const tEnd = tStart + 0.11;
   const opacity = useTransform(scrollYProgress, [tStart, tEnd], [0, 1]);
   const y = useTransform(scrollYProgress, [tStart, tStart + 0.07], [18, 0]);
-  const barScale = useTransform(scrollYProgress, [tStart + 0.04, tEnd], [0.08, 1]);
+  const barScale = useTransform(
+    scrollYProgress,
+    [tStart + 0.04, tEnd],
+    [0.08, 1],
+  );
 
   const contentInner = (
     <div
@@ -354,8 +359,9 @@ export function CasesJourneyTimeline() {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.86", "end 0.32"],
+    offset: ["start 0.93", "end 0.56"],
   });
+  const progress = useMonotonicScrollProgress(scrollYProgress);
 
   return (
     <div
@@ -368,7 +374,7 @@ export function CasesJourneyTimeline() {
       >
         <div className="relative h-full w-20 shrink-0">
           <JourneySpine
-            scrollYProgress={scrollYProgress}
+            scrollYProgress={progress}
             reduceMotion={!!reduceMotion}
           />
         </div>
@@ -383,7 +389,7 @@ export function CasesJourneyTimeline() {
             key={step.title}
             step={step}
             index={index}
-            scrollYProgress={scrollYProgress}
+            scrollYProgress={progress}
             reduceMotion={!!reduceMotion}
           />
         ))}

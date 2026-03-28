@@ -4,7 +4,6 @@ import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { Hero } from "@/components/home/hero";
 import { CommoditiesWidget } from "@/components/home/commodities-widget";
-import { LeadCaptureDialog } from "@/components/home/lead-capture-dialog";
 import { ResearchPolesMap } from "@/components/home/research-poles-map";
 import { PartnersCarousel } from "@/components/home/partners-carousel";
 import { CasesJourneyTimeline } from "@/components/home/cases-journey-timeline";
@@ -350,16 +349,13 @@ export default async function HomePage() {
               </div>
             </div>
             <div>
-              <LeadCaptureDialog
-                trigger={
-                  <Button
-                    size="lg"
-                    className="bg-accent hover:bg-accent/90 text-accent-foreground"
-                  >
-                    Clique aqui e saiba mais
-                  </Button>
-                }
-              />
+              <Button
+                asChild
+                size="lg"
+                className="bg-accent hover:bg-accent text-accent-foreground shadow-none transition-shadow duration-300 hover:shadow-[0_0_28px_hsl(var(--accent)/0.42)]"
+              >
+                <Link href="/questionario">Clique aqui e saiba mais</Link>
+              </Button>
             </div>
           </div>
         </div>

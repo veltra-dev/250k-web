@@ -38,14 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }
 
   if (isQuestionario) {
-    return (
-      <>
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <FloatingWeatherWidget />
-        <WhatsAppFAB />
-      </>
-    );
+    return <main className="flex-1 min-h-dvh">{children}</main>;
   }
 
   return (

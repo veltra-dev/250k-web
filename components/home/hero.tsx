@@ -1,10 +1,10 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { IconChevronsDown } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
-import { LeadCaptureDialog } from "./lead-capture-dialog";
 
 const DEFAULT_HERO_VIDEO_URL =
   process.env.NEXT_PUBLIC_HERO_VIDEO_URL ?? "/hero.mp4";
@@ -114,16 +114,13 @@ export function Hero({ videoSrc = DEFAULT_HERO_VIDEO_URL }: HeroProps) {
           Aplicamos a ciência que transforma dados em lucratividade
         </p>
         <div className="mt-15 flex items-center justify-center">
-          <LeadCaptureDialog
-            trigger={
-              <Button
-                size="lg"
-                className="h-16 px-10 rounded-xl bg-accent text-accent-foreground font-black text-xl uppercase tracking-tight hover:bg-accent/90 border-b-4 border-orange-900 active:border-b-0"
-              >
-                Sua Fazenda é produtiva?
-              </Button>
-            }
-          />
+          <Button
+            asChild
+            size="lg"
+            className="h-16 px-10 rounded-xl bg-accent hover:bg-accent! text-accent-foreground font-black text-xl uppercase tracking-tight border-b-4 border-orange-900 active:border-b-0 shadow-none transition-all duration-300 hover:shadow-[0_0_28px_hsl(var(--accent)/0.42)]"
+          >
+            <Link href="/questionario">Sua Fazenda é produtiva?</Link>
+          </Button>
         </div>
       </div>
 

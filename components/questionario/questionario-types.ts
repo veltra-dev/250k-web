@@ -11,7 +11,7 @@ export const cultureOptions = [
 export type Culture = (typeof cultureOptions)[number];
 
 export const decisionMakerOptions = [
-  "Produtor",
+  "Eu",
   "Gerente",
   "Consultor",
   "Grupo familiar",

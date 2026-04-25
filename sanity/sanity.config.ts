@@ -26,7 +26,7 @@ const studioTheme = buildTheme({
 export default defineConfig({
   projectId,
   dataset,
-  basePath: "/studio",
+  basePath: "/admin/studio",
   plugins: [structureTool()],
   schema: {
     types: schemaTypes,

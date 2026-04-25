@@ -14,6 +14,11 @@ export const POSTS_LIST_QUERY = `*[_type == "post" && defined(slug.current)] | o
 
 export const POSTS_COUNT_QUERY = `count(*[_type == "post" && defined(slug.current)])`;
 
+/** Datas de publicação para agregação no painel admin (sem corpo do post). */
+export const POST_PUBLISHED_DATES_QUERY = `*[_type == "post" && defined(publishedAt)] {
+  "publishedAt": publishedAt
+}`;
+
 export const POST_BY_SLUG_QUERY = `*[_type == "post" && slug.current == $slug][0] {
   _id,
   title,

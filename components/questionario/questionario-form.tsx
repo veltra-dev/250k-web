@@ -18,9 +18,11 @@ import { cn } from "@/lib/utils";
 import type {
   Culture,
   QuestionarioAnswers,
+  QuestionarioLeadPartialPayload,
   QuestionarioReport,
 } from "./questionario-types";
 import {
+  QUESTIONARIO_LEAD_PARTIAL_KEY,
   QUESTIONARIO_SESSION_KEY,
   ajustarManejoOptions,
   amostragemOptions,
@@ -174,33 +176,45 @@ const questionarioSchema = z
 type QuestionarioFormValues = z.infer<typeof questionarioSchema>;
 
 type StepId =
+  | "dados_lead"
   | "bloco1"
   | "culturas_decisao"
   | "gargalo_impacto"
   | "tentou_resolver"
   | "taxa_variavel"
   | "ajuste_manejo"
-  | "urgencia_e_dados";
+  | "urgencia";
 
 const stepOrder: StepId[] = [
+  "dados_lead",
   "bloco1",
   "culturas_decisao",
   "gargalo_impacto",
   "tentou_resolver",
   "taxa_variavel",
   "ajuste_manejo",
-  "urgencia_e_dados",
+  "urgencia",
 ];
 
 const stepFieldNames: Record<StepId, Array<keyof QuestionarioFormValues>> = {
+  dados_lead: ["clientName", "whatsapp", "email"],
   bloco1: ["farmName", "municipality", "totalAreaHa"],
   culturas_decisao: ["cultures", "decisionMaker", "otherDecisionMaker"],
   gargalo_impacto: ["mainBottleneck", "mainBottleneckImpact"],
   tentou_resolver: ["triedBefore"],
   taxa_variavel: ["georeferencedSampling", "variableRate"],
   ajuste_manejo: ["organizedHistory", "willingAdjustManagement"],
-  urgencia_e_dados: ["urgencyToResolve", "clientName", "whatsapp", "email"],
+  urgencia: ["urgencyToResolve"],
 };
+
+const leadPartialSchema = z.object({
+  clientName: z.string().trim().min(2),
+  whatsapp: z
+    .string()
+    .transform((v) => normalizeWhatsapp(v))
+    .refine((v) => v.length >= 10 && v.length <= 15),
+  email: z.string().trim().email(),
+});
 
 const cultureIds: readonly Culture[] = cultureOptions;
 
@@ -347,6 +361,54 @@ export function QuestionarioForm() {
 
   const values = form.watch();
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = sessionStorage.getItem(QUESTIONARIO_LEAD_PARTIAL_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as QuestionarioLeadPartialPayload;
+      if (parsed?.version !== 1) return;
+      if (parsed.clientName?.trim())
+        form.setValue("clientName", parsed.clientName, { shouldDirty: false });
+      if (parsed.email?.trim())
+        form.setValue("email", parsed.email, { shouldDirty: false });
+      if (parsed.whatsapp)
+        form.setValue("whatsapp", parsed.whatsapp, { shouldDirty: false });
+    } catch {
+      /* ignore */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hidratação única ao montar
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const id = window.setTimeout(() => {
+      const parsed = leadPartialSchema.safeParse({
+        clientName: values.clientName?.trim() ?? "",
+        whatsapp: values.whatsapp ?? "",
+        email: values.email?.trim() ?? "",
+      });
+      if (!parsed.success) return;
+      const payload: QuestionarioLeadPartialPayload = {
+        version: 1,
+        clientName: parsed.data.clientName,
+        whatsapp: parsed.data.whatsapp,
+        email: parsed.data.email,
+        savedAt: new Date().toISOString(),
+        stepIndex,
+      };
+      try {
+        sessionStorage.setItem(
+          QUESTIONARIO_LEAD_PARTIAL_KEY,
+          JSON.stringify(payload),
+        );
+      } catch {
+        /* ignore quota / private mode */
+      }
+    }, 700);
+    return () => window.clearTimeout(id);
+  }, [values.clientName, values.whatsapp, values.email, stepIndex]);
+
   function goBack() {
     setStepIndex((s) => Math.max(0, s - 1));
   }
@@ -384,8 +446,13 @@ export function QuestionarioForm() {
 
       const answers = data as unknown as QuestionarioAnswers;
       const report: QuestionarioReport = generateGenericReport(answers);
-      const payload = { version: 1 as const, answers, report };
+      const payload = { version: 2 as const, answers, report };
       sessionStorage.setItem(QUESTIONARIO_SESSION_KEY, JSON.stringify(payload));
+      try {
+        sessionStorage.removeItem(QUESTIONARIO_LEAD_PARTIAL_KEY);
+      } catch {
+        /* ignore */
+      }
       router.push("/questionario/resultado");
     } finally {
       setIsProcessing(false);
@@ -415,34 +482,129 @@ export function QuestionarioForm() {
             document.body,
           )
         : null}
-      <div className="px-4 pt-3 text-center text-xs text-muted-foreground md:px-6">
-        Passo {stepIndex + 1} de {totalSteps}
-      </div>
+      <form
+        id={QUESTIONARIO_FINAL_FORM_ID}
+        className="flex min-h-0 flex-1 flex-col"
+        aria-label="Questionário 250K"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!isLastStep) return;
+          void handleGenerateReport(e);
+        }}
+      >
+        <div className="px-4 pt-3 text-center text-xs text-muted-foreground md:px-6">
+          Passo {stepIndex + 1} de {totalSteps}
+        </div>
 
-      <div className="flex flex-1 flex-col px-4 pb-28 pt-4 md:px-6 md:pb-32 md:pt-6">
-        <div className="mx-auto w-full max-w-4xl flex-1">
-          <div className="mb-8 space-y-3 text-center">
-            <h1 className="text-2xl md:text-4xl font-black text-primary tracking-tight">
-              Sua fazenda é produtiva?
-            </h1>
-            {stepIndex === 0 ? (
-              <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                Se a resposta automática é “sim”, este questionário vai mostrar
-                onde a produtividade ainda está escapando — e o que fazer em
-                seguida.
-              </p>
-            ) : (
-              <>
-                <p className="text-base md:text-lg font-semibold text-foreground max-w-2xl mx-auto leading-snug">
-                  Anamnese para uma Alta Produtividade - 250K
-                </p>
+        <div className="flex flex-1 flex-col px-4 pb-28 pt-4 md:px-6 md:pb-32 md:pt-6">
+          <div className="mx-auto w-full max-w-4xl flex-1">
+            <div className="mb-8 space-y-3 text-center">
+              <h1 className="text-2xl md:text-4xl font-black text-primary tracking-tight">
+                Sua fazenda é produtiva?
+              </h1>
+              {stepId === "dados_lead" ? (
                 <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                  Descubra o que está travando a produtividade da sua fazenda
+                  Primeiro, deixe seu nome e contato. Assim conseguimos enviar seu
+                  relatório e retomar de onde parou se você sair antes de
+                  concluir.
                 </p>
-              </>
-            )}
-          </div>
-          <div className="space-y-6">
+              ) : stepId === "bloco1" ? (
+                <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                  Se a resposta automática é “sim”, este questionário vai mostrar
+                  onde a produtividade ainda está escapando — e o que fazer em
+                  seguida.
+                </p>
+              ) : (
+                <>
+                  <p className="text-base md:text-lg font-semibold text-foreground max-w-2xl mx-auto leading-snug">
+                    Anamnese para uma Alta Produtividade - 250K
+                  </p>
+                  <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                    Descubra o que está travando a produtividade da sua fazenda
+                  </p>
+                </>
+              )}
+            </div>
+            <div className="space-y-6">
+              {stepId === "dados_lead" ? (
+                <div className="flex flex-col gap-4 pb-4">
+                  <Label className="text-base">
+                    Seus dados para contato e envio do relatório
+                  </Label>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="flex flex-col space-y-2">
+                      <Label htmlFor="clientName">Seu nome</Label>
+                      <Input
+                        id="clientName"
+                        placeholder="Seu nome completo"
+                        {...form.register("clientName")}
+                        autoComplete="name"
+                        disabled={isProcessing}
+                        className={questionarioInputClassName}
+                      />
+                      {form.formState.errors.clientName ? (
+                        <p className="text-sm text-destructive">
+                          {form.formState.errors.clientName.message}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                      <Label htmlFor="whatsapp">WhatsApp</Label>
+                      <Controller
+                        name="whatsapp"
+                        control={form.control}
+                        render={({ field }) => (
+                          <Input
+                            id="whatsapp"
+                            type="tel"
+                            inputMode="tel"
+                            autoComplete="tel"
+                            placeholder="(00) 0000-0000"
+                            disabled={isProcessing}
+                            className={questionarioInputClassName}
+                            name={field.name}
+                            ref={field.ref}
+                            onBlur={field.onBlur}
+                            value={formatBrazilianPhoneInput(field.value ?? "")}
+                            onChange={(e) => {
+                              const digits = normalizeWhatsapp(
+                                e.target.value,
+                              ).slice(0, 15);
+                              field.onChange(digits);
+                            }}
+                          />
+                        )}
+                      />
+                      {form.formState.errors.whatsapp ? (
+                        <p className="text-sm text-destructive">
+                          {form.formState.errors.whatsapp.message}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                      <Label htmlFor="email">E-mail</Label>
+                      <Input
+                        id="email"
+                        placeholder="seu@email.com"
+                        inputMode="email"
+                        type="email"
+                        {...form.register("email")}
+                        autoComplete="email"
+                        disabled={isProcessing}
+                        className={questionarioInputClassName}
+                      />
+                      {form.formState.errors.email ? (
+                        <p className="text-sm text-destructive">
+                          {form.formState.errors.email.message}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
             {stepId === "bloco1" ||
             stepId === "culturas_decisao" ||
             stepId === "gargalo_impacto" ||
@@ -837,7 +999,7 @@ export function QuestionarioForm() {
               </div>
             ) : null}
 
-            {stepId === "urgencia_e_dados" ? (
+            {stepId === "urgencia" ? (
               <div className="flex flex-col gap-4 pb-12">
                 <div className="flex flex-col space-y-4">
                   <Label>Quer resolver isso ainda nesta safra?</Label>
@@ -871,92 +1033,6 @@ export function QuestionarioForm() {
                 </div>
               </div>
             ) : null}
-
-            {stepId === "urgencia_e_dados" ? (
-              <form
-                id={QUESTIONARIO_FINAL_FORM_ID}
-                onSubmit={handleGenerateReport}
-                className="flex flex-col gap-4"
-                aria-label="Questionário 250K"
-              >
-                <Label>
-                  Para finalizar e entregarmos o seu relatório final, preciso de
-                  mais algumas informações:
-                </Label>
-
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="flex flex-col space-y-2">
-                    <Label htmlFor="clientName">Seu Nome</Label>
-                    <Input
-                      id="clientName"
-                      placeholder="Seu nome completo"
-                      {...form.register("clientName")}
-                      autoComplete="name"
-                      disabled={isProcessing}
-                      className={questionarioInputClassName}
-                    />
-                    {form.formState.errors.clientName ? (
-                      <p className="text-sm text-destructive">
-                        {form.formState.errors.clientName.message}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="flex flex-col space-y-2">
-                    <Label htmlFor="whatsapp">WhatsApp</Label>
-                    <Controller
-                      name="whatsapp"
-                      control={form.control}
-                      render={({ field }) => (
-                        <Input
-                          id="whatsapp"
-                          type="tel"
-                          inputMode="tel"
-                          autoComplete="tel"
-                          placeholder="(00) 0000-0000"
-                          disabled={isProcessing}
-                          className={questionarioInputClassName}
-                          name={field.name}
-                          ref={field.ref}
-                          onBlur={field.onBlur}
-                          value={formatBrazilianPhoneInput(field.value ?? "")}
-                          onChange={(e) => {
-                            const digits = normalizeWhatsapp(
-                              e.target.value,
-                            ).slice(0, 15);
-                            field.onChange(digits);
-                          }}
-                        />
-                      )}
-                    />
-                    {form.formState.errors.whatsapp ? (
-                      <p className="text-sm text-destructive">
-                        {form.formState.errors.whatsapp.message}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="flex flex-col space-y-2">
-                    <Label htmlFor="email">E-mail</Label>
-                    <Input
-                      id="email"
-                      placeholder="seu@email.com"
-                      inputMode="email"
-                      type="email"
-                      {...form.register("email")}
-                      autoComplete="email"
-                      disabled={isProcessing}
-                      className={questionarioInputClassName}
-                    />
-                    {form.formState.errors.email ? (
-                      <p className="text-sm text-destructive">
-                        {form.formState.errors.email.message}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-              </form>
-            ) : null}
           </div>
         </div>
       </div>
@@ -978,12 +1054,7 @@ export function QuestionarioForm() {
             Voltar
           </Button>
           {isLastStep ? (
-            <Button
-              type="submit"
-              form={QUESTIONARIO_FINAL_FORM_ID}
-              disabled={isProcessing}
-              size="lg"
-            >
+            <Button type="submit" disabled={isProcessing} size="lg">
               {isProcessing ? (
                 <>
                   <Loader2
@@ -1021,6 +1092,7 @@ export function QuestionarioForm() {
           )}
         </div>
       </div>
+      </form>
     </div>
   );
 }

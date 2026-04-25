@@ -156,7 +156,7 @@ export default function SolucoesPage() {
 
         <section id="field-k">
           <AboutBlock
-            title="FieldK"
+            title="FIELDK"
             {...solucoesSectionTitleProps}
             imageSrc={FIELD_IMAGE}
             imageAlt="Execução e validação no campo"
@@ -227,7 +227,7 @@ export default function SolucoesPage() {
 
         <section id="finance-k">
           <AboutBlock
-            title="FinanceK"
+            title="FINANCEK"
             {...solucoesSectionTitleProps}
             imageSrc={FINANCE_IMAGE}
             imageAlt="Pool de Compra"
@@ -259,7 +259,7 @@ export default function SolucoesPage() {
 
         <section id="solo-chec-k">
           <AboutBlock
-            title="Solo ChecK"
+            title="SOLO CHECK"
             {...solucoesSectionTitleProps}
             imageSrc={SOLO_CHEC_IMAGE}
             imageAlt="Agricultura de Precisão"
@@ -307,7 +307,7 @@ export default function SolucoesPage() {
 
         <section id="certifica-k">
           <AboutBlock
-            title="CertificaK"
+            title="CERTIFICAK"
             {...solucoesSectionTitleProps}
             imageSrc={CERTIFICA_IMAGE}
             imageAlt="Certificação de Fazendas Produtivas"

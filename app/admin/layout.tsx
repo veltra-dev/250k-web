@@ -1,3 +1,4 @@
+import { AdminDashboardShell } from "@/components/admin/admin-dashboard-shell";
 import { AdminHeader } from "./admin-header";
 
 export default function AdminLayout({
@@ -6,9 +7,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-dvh flex flex-col bg-background">
+    <div className="flex min-h-dvh flex-col bg-background">
       <AdminHeader />
-      <main className="flex-1">{children}</main>
+      <div className="flex min-h-0 flex-1">
+        <AdminDashboardShell>{children}</AdminDashboardShell>
+      </div>
     </div>
   );
 }

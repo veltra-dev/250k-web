@@ -309,7 +309,7 @@ export function BuilderPageContent() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/admin">Landing pages</Link>
+              <Link href="/admin/landing-pages">Landing pages</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
@@ -325,7 +325,7 @@ export function BuilderPageContent() {
 
   return (
     <>
-      <div className="w-full h-dvh flex flex-col overflow-hidden px-6 sm:px-12 py-6">
+      <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden px-6 py-6 sm:px-12">
         <div className="flex flex-1 min-h-0 overflow-hidden flex-col">
           {/* Mobile: breadcrumb + editor + footer at bottom */}
           <div className="flex flex-col min-h-0 flex-1 lg:hidden">

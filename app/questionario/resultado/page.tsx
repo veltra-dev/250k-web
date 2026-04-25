@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 import { ConfettiOverlay } from "@/components/questionario/confetti-overlay";
+import {
+  DIAGNOSTICO_SECTION_KEYS,
+  SECTION_TITLES_PT,
+} from "@/components/questionario/diagnostico-engine";
 import type { QuestionarioSessionPayload } from "@/components/questionario/questionario-types";
 import { QUESTIONARIO_SESSION_KEY } from "@/components/questionario/questionario-types";
 import { printQuestionarioResultado } from "@/lib/questionario-resultado-print";
@@ -50,8 +54,8 @@ export default function QuestionarioResultadoPage() {
     };
   }, [payload]);
 
-  const paragraphs = useMemo(() => {
-    if (!payload) return [];
+  const legacyParagraphs = useMemo(() => {
+    if (!payload || payload.report.sections) return [];
     return splitParagraphs(payload.report.reportText);
   }, [payload]);
 
@@ -99,6 +103,20 @@ export default function QuestionarioResultadoPage() {
               <p className="text-muted-foreground mt-2">
                 {payload.answers.farmName} - {payload.answers.municipality}
               </p>
+              {payload.report.producerTier != null &&
+                payload.report.productiveLossScHa != null &&
+                payload.report.financialImpactRPerHa != null && (
+                  <p className="text-sm text-foreground/85 mt-3 leading-relaxed">
+                    <span className="font-semibold text-primary">
+                      {payload.report.producerTier}
+                    </span>
+                    {" · "}
+                    {`Estimativa: ${payload.report.productiveLossScHa} sc/ha (~R$ ${payload.report.financialImpactRPerHa.toLocaleString("pt-BR")}/ha)`}
+                    {payload.report.pricingCultureBasis === "Referência_soja"
+                      ? " — referência em saca de soja para culturas fora da tabela do manual"
+                      : null}
+                  </p>
+                )}
             </div>
 
             <div>
@@ -114,16 +132,31 @@ export default function QuestionarioResultadoPage() {
               </ul>
             </div>
 
-            <div className="space-y-4">
-              {paragraphs.map((p, idx) => (
-                <p
-                  key={`${idx}_${p.slice(0, 10)}`}
-                  className="text-muted-foreground leading-relaxed"
-                >
-                  {p}
-                </p>
-              ))}
-            </div>
+            {payload.report.sections ? (
+              <div className="space-y-8">
+                {DIAGNOSTICO_SECTION_KEYS.map((key) => (
+                  <div key={key} className="space-y-2">
+                    <h2 className="text-lg font-semibold text-primary border-b border-border/60 pb-1">
+                      {SECTION_TITLES_PT[key]}
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
+                      {payload.report.sections![key]}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {legacyParagraphs.map((p, idx) => (
+                  <p
+                    key={`${idx}_${p.slice(0, 10)}`}
+                    className="text-muted-foreground leading-relaxed"
+                  >
+                    {p}
+                  </p>
+                ))}
+              </div>
+            )}
 
             <div className="questionario-resultado-print-footer pt-4 border-t border-border/60 flex flex-col items-center gap-4">
               <div className="questionario-resultado-print-logo relative h-20 w-20">

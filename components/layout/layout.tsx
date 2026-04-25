@@ -9,7 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { WhatsAppFAB } from "@/components/layout/whatsapp-fab";
 import { FloatingWeatherWidget } from "@/components/layout/floating-weather-widget";
 
-const STUDIO_PATH = "/studio";
+const STUDIO_PATH = "/admin/studio";
 const ADMIN_PATH = "/admin";
 const TOP_LEVEL_ROUTES = [
   "",

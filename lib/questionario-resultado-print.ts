@@ -1,3 +1,7 @@
+import {
+  DIAGNOSTICO_SECTION_KEYS,
+  SECTION_TITLES_PT,
+} from "@/components/questionario/diagnostico-engine";
 import type { QuestionarioSessionPayload } from "@/components/questionario/questionario-types";
 
 function escapeHtml(text: string): string {
@@ -16,6 +20,36 @@ function splitParagraphs(text: string): string[] {
     .filter(Boolean);
 }
 
+function buildReportHtmlBody(payload: QuestionarioSessionPayload): string {
+  if (payload.report.sections) {
+    return DIAGNOSTICO_SECTION_KEYS.map((key) => {
+      const title = SECTION_TITLES_PT[key];
+      const body = escapeHtml(payload.report.sections![key]);
+      return `<h2>${escapeHtml(title)}</h2><p>${body}</p>`;
+    }).join("");
+  }
+  const paragraphs = splitParagraphs(payload.report.reportText);
+  return paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join("");
+}
+
+function buildMetricsLine(payload: QuestionarioSessionPayload): string {
+  const { report } = payload;
+  if (
+    report.producerTier == null ||
+    report.productiveLossScHa == null ||
+    report.financialImpactRPerHa == null
+  ) {
+    return "";
+  }
+  const money = report.financialImpactRPerHa.toLocaleString("pt-BR");
+  let line = `${report.producerTier} · Estimativa: ${report.productiveLossScHa} sc/ha (~R$ ${money}/ha)`;
+  if (report.pricingCultureBasis === "Referência_soja") {
+    line +=
+      " — referência em saca de soja para culturas fora da tabela do manual";
+  }
+  return `<p class="metrics">${escapeHtml(line)}</p>`;
+}
+
 /**
  * Opens a minimal same-origin document and prints it. Avoids Chrome PDF bugs with
  * the main app DOM (visibility, overflow, theme tokens, etc.).
@@ -31,7 +65,6 @@ export function printQuestionarioResultado(
     return;
   }
 
-  const paragraphs = splitParagraphs(payload.report.reportText);
   const logoUrl = `${window.location.origin}/web-app-manifest-512x512.png`;
   const farmLine = `${payload.answers.farmName} - ${payload.answers.municipality}`;
 
@@ -39,9 +72,8 @@ export function printQuestionarioResultado(
     .map((h) => `<li>${escapeHtml(h)}</li>`)
     .join("");
 
-  const bodyParagraphs = paragraphs
-    .map((p) => `<p>${escapeHtml(p)}</p>`)
-    .join("");
+  const metricsLine = buildMetricsLine(payload);
+  const reportInner = buildReportHtmlBody(payload);
 
   const html = `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -76,8 +108,14 @@ export function printQuestionarioResultado(
   }
   .farm {
     color: #333;
-    margin: 0 0 1.1em;
+    margin: 0 0 0.65em;
     font-size: 10.5pt;
+  }
+  .metrics {
+    margin: 0 0 1.1em;
+    font-size: 10pt;
+    color: #333;
+    line-height: 1.35;
   }
   h2 {
     font-size: 10.5pt;
@@ -101,9 +139,10 @@ export function printQuestionarioResultado(
   <p class="kicker">Resultado do questionário</p>
   <h1>Tipo de Resposta: ${escapeHtml(payload.report.reportType)}</h1>
   <p class="farm">${escapeHtml(farmLine)}</p>
+  ${metricsLine}
   <h2>Pontos-chave</h2>
   <ul>${listItems}</ul>
-  <div class="report">${bodyParagraphs}</div>
+  <div class="report">${reportInner}</div>
   <div class="footer">
     <img src="${logoUrl}" alt="Logo 250K" width="40" height="40" />
     <p class="tagline">Anamnese para Alta Produtividade - 250K</p>

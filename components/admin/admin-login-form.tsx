@@ -30,7 +30,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") ?? "/admin";
+  const redirect = searchParams.get("redirect") ?? "/admin/dashboard";
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -81,7 +81,9 @@ export function AdminLoginForm() {
     try {
       const { error: err } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${window.location.origin}/admin` },
+        options: {
+          emailRedirectTo: `${window.location.origin}/admin/dashboard`,
+        },
       });
       if (err) {
         setServerError(err.message);

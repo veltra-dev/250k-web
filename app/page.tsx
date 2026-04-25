@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { archivoSolutionTitle } from "@/lib/fonts/archivo-solution-title";
+import { splitBrandKTitle } from "@/lib/solucoes-brand-title";
+import { cn } from "@/lib/utils";
 import { Hero } from "@/components/home/hero";
 import { CommoditiesWidget } from "@/components/home/commodities-widget";
 import { ResearchPolesMap } from "@/components/home/research-poles-map";
@@ -15,12 +18,36 @@ import { PropositoEquation } from "@/components/home/proposito-equation";
 const hubCardFooterCopyClass =
   "text-center text-sm font-semibold leading-snug text-primary";
 
+const hubWordmarkTitleStyle = {
+  fontVariationSettings: "'wght' 800, 'wdth' 125",
+} as const;
+
+const hubWordmarkClassName = cn(
+  archivoSolutionTitle.className,
+  "block max-w-full break-words px-1 text-center uppercase leading-tight tracking-tight text-primary",
+  "text-sm sm:text-base md:text-lg lg:text-xl",
+);
+
+function HubSolutionWordmark({ wordmark }: { wordmark: string }) {
+  const { before, accent, after } = splitBrandKTitle(wordmark);
+  return (
+    <span className={hubWordmarkClassName} style={hubWordmarkTitleStyle}>
+      {before}
+      {accent ? (
+        <span className="text-brand-orange dark:text-[hsl(11_55%_62%)]">
+          {accent}
+        </span>
+      ) : null}
+      {after}
+    </span>
+  );
+}
+
 type HubProduct =
   | {
       type: "solution";
       href: string;
-      logo: string;
-      logoAlt: string;
+      wordmark: string;
       subtitle: string;
     }
   | {
@@ -36,36 +63,31 @@ const hubProducts: HubProduct[] = [
   {
     type: "solution",
     href: "/solucoes#pd-k",
-    logo: "/images/empresas/pdK.svg",
-    logoAlt: "PD-K",
+    wordmark: "PDK",
     subtitle: "Pesquisa e Desenvolvimento",
   },
   {
     type: "solution",
     href: "/solucoes#field-k",
-    logo: "/images/empresas/FiedK.svg",
-    logoAlt: "Field-K",
+    wordmark: "FieldK",
     subtitle: "Plano de safra e execução no campo",
   },
   {
     type: "solution",
     href: "/solucoes#finance-k",
-    logo: "/images/empresas/FinanceK.svg",
-    logoAlt: "Finance-K",
+    wordmark: "FinanceK",
     subtitle: "Pool de Compra",
   },
   {
     type: "solution",
     href: "/solucoes#solo-chec-k",
-    logo: "/images/empresas/solo%20checK.svg",
-    logoAlt: "Solo Chec-K",
+    wordmark: "Solo ChecK",
     subtitle: "Agricultura de Precisão",
   },
   {
     type: "solution",
     href: "/solucoes#certifica-k",
-    logo: "/images/empresas/CertificaK.svg",
-    logoAlt: "Certifica-K",
+    wordmark: "CertificaK",
     subtitle: "Certificadora de Fazendas Produtivas",
   },
   {
@@ -207,7 +229,7 @@ export default async function HomePage() {
               const shellClass =
                 "flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border/60 bg-background shadow-sm transition-colors hover:border-border hover:shadow-md";
 
-              const body = (
+              const body = isAcademy ? (
                 <div className="flex min-h-[104px] flex-1 items-center justify-center bg-linear-to-b from-primary/18 via-primary/10 to-primary/5 p-3 sm:min-h-[118px] sm:p-3.5">
                   <Image
                     src={item.logo}
@@ -216,8 +238,12 @@ export default async function HomePage() {
                     height={80}
                     className="h-15 w-auto max-w-30 object-contain sm:h-17 sm:max-w-32"
                     unoptimized
-                    priority={isAcademy}
+                    priority
                   />
+                </div>
+              ) : (
+                <div className="flex min-h-[88px] flex-1 items-center justify-center bg-linear-to-b from-primary/18 via-primary/10 to-primary/5 px-1.5 py-2 sm:min-h-[100px] sm:px-2 sm:py-2.5">
+                  <HubSolutionWordmark wordmark={item.wordmark} />
                 </div>
               );
 
@@ -245,7 +271,7 @@ export default async function HomePage() {
                   ) : (
                     <div className="space-y-2 text-center sm:space-y-2.5">
                       <p className={hubCardFooterCopyClass}>{item.subtitle}</p>
-                      <div className="text-xs font-normal text-primary group-hover:underline sm:text-sm">
+                      <div className="text-xs font-normal text-primary transition-colors group-hover:text-brand-orange group-hover:underline dark:group-hover:text-[hsl(11_55%_62%)] sm:text-sm">
                         Saiba mais
                       </div>
                     </div>
@@ -267,6 +293,7 @@ export default async function HomePage() {
                   key={item.href}
                   href={item.href}
                   className={`group ${shellClass}`}
+                  aria-label={`${item.wordmark}: ${item.subtitle}`}
                 >
                   {body}
                   {footer}

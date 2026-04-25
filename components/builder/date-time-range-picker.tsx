@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { ptBR as dateFnsPtBR } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
@@ -45,6 +45,18 @@ function timeStrWithDate(date: Date, timeStr: string): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate(), h, m);
 }
 
+function useCompactCalendarMonths(breakpointPx = 720) {
+  const [months, setMonths] = useState(1);
+  useEffect(() => {
+    const mq = window.matchMedia(`(min-width: ${breakpointPx}px)`);
+    const sync = () => setMonths(mq.matches ? 2 : 1);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, [breakpointPx]);
+  return months;
+}
+
 export interface DateTimeRangePickerProps {
   startValue: string;
   endValue: string;
@@ -63,6 +75,7 @@ export function DateTimeRangePicker({
   id,
 }: DateTimeRangePickerProps) {
   const [open, setOpen] = useState(false);
+  const numberOfMonths = useCompactCalendarMonths(720);
 
   const fromDate = startValue ? new Date(startValue) : undefined;
   const toDate = endValue ? new Date(endValue) : undefined;
@@ -118,17 +131,23 @@ export function DateTimeRangePicker({
           <span className="truncate">{label}</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full min-w-[280px] sm:min-w-[700px] p-0" align="start">
-        <Calendar
-          mode="range"
-          selected={range}
-          onSelect={handleRangeSelect}
-          defaultMonth={fromDate ?? toDate}
-          numberOfMonths={2}
-          locale={dayPickerPtBR}
-          className="w-full"
-        />
-        <div className="grid grid-cols-2 gap-3 border-t p-3">
+      <PopoverContent
+        align="start"
+        sideOffset={6}
+        className="flex max-h-[min(90dvh,720px)] w-[calc(100vw-1.25rem)] max-w-[min(100vw-1.25rem,720px)] flex-col overflow-hidden p-0 sm:w-auto sm:min-w-[min(100vw-2rem,680px)]"
+      >
+        <div className="min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-auto overscroll-contain">
+          <Calendar
+            mode="range"
+            selected={range}
+            onSelect={handleRangeSelect}
+            defaultMonth={fromDate ?? toDate}
+            numberOfMonths={numberOfMonths}
+            locale={dayPickerPtBR}
+            className="w-max min-w-full bg-transparent"
+          />
+        </div>
+        <div className="relative z-20 grid shrink-0 grid-cols-2 gap-3 border-t bg-popover p-3 shadow-[0_-6px_16px_-4px_rgba(0,0,0,0.08)] dark:shadow-[0_-6px_16px_-4px_rgba(0,0,0,0.35)]">
           <div className="space-y-1">
             <Label
               htmlFor={`${id}-start-time`}

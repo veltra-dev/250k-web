@@ -31,7 +31,7 @@ export function BuilderFixedFooter({
   loading = false,
   className,
 }: BuilderFixedFooterProps) {
-  const saveDisabled = loading || saving || !currentId;
+  const saveDisabled = loading || saving;
   const deleteDisabled = loading || deleting || !currentId;
 
   return (

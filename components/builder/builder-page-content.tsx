@@ -173,20 +173,23 @@ export function BuilderPageContent() {
   useEffect(() => {
     if (!slugParam) return;
     setPageLoading(true);
-    getLandingPageBySlug(slugParam).then((result) => {
-      if (!("error" in result)) {
-        form.reset({
-          slug: result.slug,
-          title: result.title,
-          description: result.description,
-          content: ensureBlockIds(result.content),
-          starts_at: result.starts_at ? toDatetimeLocal(result.starts_at) : "",
-          ends_at: result.ends_at ? toDatetimeLocal(result.ends_at) : "",
-        });
-        setCurrentId(result.id);
-      }
-      setPageLoading(false);
-    });
+    void getLandingPageBySlug(slugParam)
+      .then((result) => {
+        if (!("error" in result)) {
+          form.reset({
+            slug: result.slug,
+            title: result.title,
+            description: result.description,
+            content: ensureBlockIds(result.content),
+            starts_at: result.starts_at ? toDatetimeLocal(result.starts_at) : "",
+            ends_at: result.ends_at ? toDatetimeLocal(result.ends_at) : "",
+          });
+          setCurrentId(result.id);
+        }
+      })
+      .finally(() => {
+        setPageLoading(false);
+      });
   }, [slugParam, form]);
 
   const loading = pageLoading || saving || deleting;
